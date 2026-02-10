@@ -1,0 +1,60 @@
+{
+  "title": "La Route de Kessel",
+  "description": "Trajet dangereux à travers champs d'astéroïdes. Choisissez la trajectoire pour économiser carburant et temps.",
+  "segments": [
+    {
+      "id": 1,
+      "name": "Périphérie d'Ord Cestus",
+      "options": {
+        "safe": { "fuel": -5, "time": -12, "risk": 0 },
+        "balanced": { "fuel": -10, "time": -9, "risk": 0.2 },
+        "risky": { "fuel": -18, "time": -5, "risk": 0.45 }
+      }
+    },
+    {
+      "id": 2,
+      "name": "Belt of Debris",
+      "options": {
+        "safe": { "fuel": -6, "time": -13, "risk": 0 },
+        "balanced": { "fuel": -11, "time": -8, "risk": 0.2 },
+        "risky": { "fuel": -20, "time": -6, "risk": 0.5 }
+      }
+    },
+    {
+      "id": 3,
+      "name": "Patrouille Impériale",
+      "options": {
+        "safe": { "fuel": -4, "time": -14, "risk": 0 },
+        "balanced": { "fuel": -9, "time": -10, "risk": 0.25 },
+        "risky": { "fuel": -16, "time": -6, "risk": 0.6 }
+      }
+    },
+    {
+      "id": 4,
+      "name": "Narrow Run",
+      "options": {
+        "safe": { "fuel": -7, "time": -11, "risk": 0 },
+        "balanced": { "fuel": -12, "time": -8, "risk": 0.3 },
+        "risky": { "fuel": -22, "time": -4, "risk": 0.55 }
+      }
+    },
+    {
+      "id": 5,
+      "name": "Gravity Well",
+      "options": {
+        "safe": { "fuel": -8, "time": -15, "risk": 0 },
+        "balanced": { "fuel": -13, "time": -9, "risk": 0.35 },
+        "risky": { "fuel": -24, "time": -5, "risk": 0.6 }
+      }
+    },
+    {
+      "id": 6,
+      "name": "Final Sprint",
+      "options": {
+        "safe": { "fuel": -6, "time": -10, "risk": 0 },
+        "balanced": { "fuel": -11, "time": -7, "risk": 0.25 },
+        "risky": { "fuel": -19, "time": -3, "risk": 0.5 }
+      }
+    }
+  ]
+}

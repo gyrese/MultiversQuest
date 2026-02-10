@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import ActivityShell from '../components/activity/ActivityShell';
 import { useActivityScore } from '../hooks/useActivityScore';
@@ -29,6 +29,7 @@ export default function KesselRun({ universeId = 'star_wars', onComplete, onExit
     const [inRepair, setInRepair] = useState(false);
     const [repairProgress, setRepairProgress] = useState(0);
     const timerRef = useRef(null);
+    const audioRef = useRef(null);
 
     // Start run
     const handleStart = () => {
@@ -39,6 +40,46 @@ export default function KesselRun({ universeId = 'star_wars', onComplete, onExit
         setFuel(100);
         setTimeLeft(120);
         recordAction(false);
+        playSound('start');
+    };
+
+    // AUDIO helpers (lightweight WebAudio beeps)
+    const getAudioCtx = useCallback(() => {
+        if (!audioRef.current) {
+            audioRef.current = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        return audioRef.current;
+    }, []);
+
+    const playSound = (type) => {
+        try {
+            const ctx = getAudioCtx();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            const map = {
+                start: { freq: 520, dur: 0.12 },
+                choose_safe: { freq: 420, dur: 0.08 },
+                choose_balanced: { freq: 520, dur: 0.08 },
+                choose_risky: { freq: 720, dur: 0.1 },
+                repair_tick: { freq: 300, dur: 0.05 },
+                repair_done: { freq: 900, dur: 0.14 },
+                fail: { freq: 160, dur: 0.3 }
+            };
+
+            const cfg = map[type] || { freq: 440, dur: 0.08 };
+            osc.type = 'sine';
+            osc.frequency.value = cfg.freq;
+            gain.gain.setValueAtTime(0.06, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + cfg.dur);
+
+            osc.start();
+            osc.stop(ctx.currentTime + cfg.dur);
+        } catch (e) {
+            // ignore if WebAudio unavailable
+        }
     };
 
     // Main loop: time countdown and automatic progression if not repairing
@@ -82,10 +123,16 @@ export default function KesselRun({ universeId = 'star_wars', onComplete, onExit
 
         setChosenPath(prev => ({ ...prev, [segment]: choice }));
 
+        // sound feedback per choice
+        if (choice === 'safe') playSound('choose_safe');
+        else if (choice === 'balanced') playSound('choose_balanced');
+        else playSound('choose_risky');
+
         // Random chance to trigger a repair mini-game on risky routes
         if (Math.random() < c.risk) {
             setInRepair(true);
             setRepairProgress(0);
+            playSound('repair_tick');
         } else {
             // progress to next segment after short delay
             setTimeout(() => setSegment(s => s + 1), 800);
@@ -97,6 +144,7 @@ export default function KesselRun({ universeId = 'star_wars', onComplete, onExit
         if (!inRepair) return;
         const id = setInterval(() => {
             setRepairProgress(p => Math.min(100, p + 8));
+            playSound('repair_tick');
         }, 300);
         return () => clearInterval(id);
     }, [inRepair]);
@@ -108,6 +156,7 @@ export default function KesselRun({ universeId = 'star_wars', onComplete, onExit
         setInRepair(false);
         setRepairProgress(0);
         setTimeout(() => setSegment(s => s + 1), 400);
+        playSound('repair_done');
     };
 
     // If we passed last segment -> success
@@ -150,14 +199,14 @@ export default function KesselRun({ universeId = 'star_wars', onComplete, onExit
                         <div className="text-center">
                             <div className="text-sm text-gray-300">Carburant</div>
                             <div className="w-48 bg-gray-800 h-4 rounded overflow-hidden">
-                                <div style={{ width: `${fuel}%`, background: fuelColor, height: '100%' }} />
+                                <motion.div animate={{ width: `${fuel}%` }} transition={{ ease: 'easeOut', duration: 0.6 }} style={{ background: fuelColor, height: '100%' }} />
                             </div>
                             <div className="text-xs text-gray-400">{Math.round(fuel)}%</div>
                         </div>
 
                         <div className="text-center">
                             <div className="text-sm text-gray-300">Temps restant</div>
-                            <div className="text-2xl font-mono">{Math.max(0, timeLeft)}s</div>
+                            <motion.div key={timeLeft} className="text-2xl font-mono" animate={{ scale: [1, 1.04, 1] }} transition={{ duration: 0.4 }}>{Math.max(0, timeLeft)}s</motion.div>
                         </div>
                     </div>
                 </div>
@@ -187,7 +236,7 @@ export default function KesselRun({ universeId = 'star_wars', onComplete, onExit
                         <div className="text-center">
                             <div className="text-lg font-bold mb-2">Réparation en cours</div>
                             <div className="w-3/4 mx-auto bg-gray-800 h-6 rounded overflow-hidden mb-3">
-                                <div style={{ width: `${repairProgress}%`, background: '#3b82f6', height: '100%' }} />
+                                <motion.div animate={{ width: `${repairProgress}%` }} transition={{ ease: 'linear', duration: 0.2 }} style={{ background: '#3b82f6', height: '100%' }} />
                             </div>
                             <div className="flex gap-3 justify-center">
                                 <button onClick={completeRepair} className="px-4 py-2 bg-blue-600 rounded text-white" disabled={repairProgress < 80}>Terminer réparation</button>
