@@ -36,6 +36,7 @@ function createInitialState() {
     return {
         isInitialized: false,
         teamName: '',
+        avatarStyle: 'bottts', // Style DiceBear par défaut
         points: 0,
         fragments: 0,
         currentActivity: null,
@@ -52,6 +53,7 @@ function playerReducer(state, action) {
                 ...state,
                 isInitialized: true,
                 teamName: action.payload.teamName,
+                avatarStyle: action.payload.avatarStyle || 'bottts',
             };
         }
 
@@ -186,8 +188,8 @@ export function PlayerProvider({ children }) {
 
     // Actions
     const actions = useMemo(() => ({
-        initializeTeam: (teamName) => {
-            dispatch({ type: 'INITIALIZE_TEAM', payload: { teamName } });
+        initializeTeam: (teamName, avatarStyle = 'bottts') => {
+            dispatch({ type: 'INITIALIZE_TEAM', payload: { teamName, avatarStyle } });
         },
 
         unlockUniverse: (universeId) => {

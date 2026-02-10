@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGame } from '../context/PlayerContext';
 import { UNIVERSES, UNIVERSE_ORDER } from '../data/universes';
+import { getAvatarUrl } from '../utils/avatars';
 import UniverseCard from './UniverseCard';
 
 export default function Hub({ onStartActivity }) {
@@ -122,27 +123,31 @@ export default function Hub({ onStartActivity }) {
                         {/* Team Avatar & Info */}
                         <div className="flex items-center gap-3">
                             <motion.div
-                                className="relative w-12 h-12 rounded-xl flex items-center justify-center font-bold text-white text-lg overflow-hidden"
+                                className="relative w-12 h-12 rounded-xl overflow-hidden"
                                 style={{
-                                    background: 'linear-gradient(135deg, #00d4ff 0%, #a855f7 50%, #ec4899 100%)',
+                                    border: '2px solid rgba(0,212,255,0.5)',
                                 }}
                                 animate={{
                                     boxShadow: [
-                                        '0 0 15px rgba(0,212,255,0.6), inset 0 0 15px rgba(255,255,255,0.2)',
-                                        '0 0 25px rgba(168,85,247,0.6), inset 0 0 25px rgba(255,255,255,0.3)',
-                                        '0 0 15px rgba(0,212,255,0.6), inset 0 0 15px rgba(255,255,255,0.2)',
+                                        '0 0 15px rgba(0,212,255,0.6)',
+                                        '0 0 25px rgba(168,85,247,0.6)',
+                                        '0 0 15px rgba(0,212,255,0.6)',
                                     ],
                                 }}
                                 transition={{ duration: 3, repeat: Infinity }}
                             >
-                                {state.teamName.charAt(0).toUpperCase()}
+                                <img
+                                    src={getAvatarUrl(state.teamName, state.avatarStyle || 'bottts', 96)}
+                                    alt={state.teamName}
+                                    className="w-full h-full object-cover"
+                                />
                                 {/* Holographic overlay */}
                                 <motion.div
                                     className="absolute inset-0"
                                     animate={{ backgroundPosition: ['0% 0%', '200% 200%'] }}
                                     transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
                                     style={{
-                                        background: 'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%)',
+                                        background: 'linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.2) 50%, transparent 60%)',
                                         backgroundSize: '200% 200%',
                                     }}
                                 />

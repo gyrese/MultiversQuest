@@ -16,7 +16,7 @@ export default function Dashboard() {
     const currentTheme = THEMES[themeIndex];
 
     // Generate Nexus URL for QR code - Use network IP for mobile access
-    const nexusUrl = 'http://192.168.1.13:5174/nexus';
+    const nexusUrl = 'http://192.168.1.14:5173/nexus';
 
     useEffect(() => { identify('DASHBOARD'); }, [identify]);
 

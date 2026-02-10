@@ -1,25 +1,26 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
+import AdminPanel from './pages/AdminPanel';
+import WarRoom from './pages/WarRoom';
 import PlayerApp from './PlayerApp';
-import { GameProvider } from './context/GameContext';
+// GameProvider est fourni par main.jsx
 
 export default function App() {
     return (
         <BrowserRouter>
             <Routes>
-                {/* Dashboard pour l'affichage principal (TV/écran) - avec GameProvider pour sync */}
-                <Route path="/" element={
-                    <GameProvider>
-                        <Dashboard />
-                    </GameProvider>
-                } />
-                <Route path="/dashboard" element={
-                    <GameProvider>
-                        <Dashboard />
-                    </GameProvider>
-                } />
+                {/* Dashboard pour l'affichage principal (TV/écran) */}
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/dashboard" element={<Dashboard />} />
 
-                {/* Nexus/Player pour les joueurs (mobile) - PlayerApp a son propre GameProvider */}
+                {/* 🎮 War Room - Quartiers Généraux du Multivers */}
+                <Route path="/warroom" element={<WarRoom />} />
+
+                {/* 👑 Panel Admin - Game Master Interface */}
+                <Route path="/admin" element={<AdminPanel />} />
+                <Route path="/gm" element={<AdminPanel />} />
+
+                {/* Nexus/Player pour les joueurs (mobile) */}
                 <Route path="/nexus" element={<PlayerApp />} />
                 <Route path="/join" element={<PlayerApp />} />
                 <Route path="/play" element={<PlayerApp />} />

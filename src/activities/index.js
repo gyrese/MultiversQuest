@@ -6,14 +6,20 @@
 
 // Odyssée Spatiale
 export { default as Rencontre3eType } from './Rencontre3eType';
-
-// TODO: Ajouter les autres activités au fur et à mesure
-// export { default as StarWarsForce } from './StarWarsForce';
-// export { default as AlienSurvie } from './AlienSurvie';
-// etc.
+// Jurassic Park
+export { default as JurassicHack } from './JurassicHack';
+// Royaumes Légendaires
+export { default as SceauRunique } from './SceauRunique';
+// Réalités Altérées
+export { default as TenetInversion } from './TenetInversion';
+// Star Wars
+export { default as KesselRun } from './KesselRun';
 
 // Map des activités par ID pour le chargement dynamique
 export const ACTIVITY_COMPONENTS = {
     'rencontre_3e_type': () => import('./Rencontre3eType'),
-    // Ajouter les autres activités ici
+    'jurassic_hack': () => import('./JurassicHack'),
+    'sceau_runique': () => import('./SceauRunique'),
+    'tenet_inversion': () => import('./TenetInversion'),
+    'kessel_run': () => import('./KesselRun'),
 };

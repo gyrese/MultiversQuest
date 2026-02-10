@@ -83,15 +83,15 @@ export const UNIVERSES = {
         background: 'linear-gradient(135deg, #1a0f00 0%, #2d1810 50%, #1a0f00 100%)',
         description: 'Entrez dans des mondes de magie et de légendes',
         activities: {
-            lotr_enigmes: {
-                id: 'lotr_enigmes',
-                name: 'Les Énigmes de Gollum',
-                film: 'Le Seigneur des Anneaux (Trilogie)',
-                icon: '💍',
-                type: 'riddles',
-                description: 'Résolvez les énigmes comme Bilbon face à Gollum',
+            sceau_runique: {
+                id: 'sceau_runique',
+                name: 'Le Sceau Runique',
+                film: 'Seigneur des Anneaux / Harry Potter',
+                icon: '✍️',
+                type: 'drawing',
+                description: 'Tracez le symbole magique pour sceller le portail',
                 difficulty: 2,
-                maxPoints: 300,
+                maxPoints: 500,
             },
             got_trone: {
                 id: 'got_trone',
@@ -260,15 +260,16 @@ export const UNIVERSES = {
         background: 'linear-gradient(135deg, #0a1a0a 0%, #1a2a1a 50%, #0a1a0a 100%)',
         description: 'Voyagez dans des ères où l\'homme n\'existait pas',
         activities: {
-            jurassic_adn: {
-                id: 'jurassic_adn',
-                name: 'Séquençage ADN',
-                film: 'Jurassic Park (Saga)',
-                icon: '🧬',
+            jurassic_hack: {
+                id: 'jurassic_hack',
+                name: 'Système de Sécurité',
+                film: 'Jurassic Park (1993)',
+                icon: '💻',
                 type: 'sequence',
-                description: 'Complétez les séquences ADN pour recréer les dinosaures',
+                description: 'Piratez le système de sécurité pour reprendre le contrôle du parc',
                 difficulty: 2,
-                maxPoints: 300,
+                maxPoints: 400,
+                hint: 'Reproduisez la séquence de touches pour déverrouiller le système',
             },
             kong_survie: {
                 id: 'kong_survie',
@@ -361,6 +362,125 @@ export const UNIVERSES = {
             },
         },
     },
+
+
+    // 📺 CLUB DOROTHÉE - Nostalgie animée des années 80/90
+    club_dorothee: {
+        id: 'club_dorothee',
+        name: 'GÉNÉRATION CLUB DO\'',
+        subtitle: 'Pas de pitié pour les croissants',
+        icon: '📺',
+        image: '/images/universes/club_dorothee.png',
+        colors: {
+            primary: '#ff00ff',
+            secondary: '#1a0528',
+            accent: '#00ffff',
+            glow: 'rgba(255, 0, 255, 0.5)',
+        },
+        background: 'linear-gradient(135deg, #1a0528 0%, #2d0a3d 50%, #1a0528 100%)',
+        description: 'Retrouvez les héros légendaires de votre enfance',
+        activities: {
+            dbz_kamehameha: {
+                id: 'dbz_kamehameha',
+                name: 'Kamehameha Challenge',
+                film: 'Dragon Ball Z',
+                icon: '💥',
+                type: 'timing',
+                description: 'Concentrez votre ki au bon moment pour lancer l\'attaque ultime',
+                difficulty: 3,
+                maxPoints: 350,
+            },
+            nicky_larson_tir: {
+                id: 'nicky_larson_tir',
+                name: 'Le Tir de Nicky',
+                film: 'Nicky Larson',
+                icon: '🔫',
+                type: 'precision',
+                description: 'Visez juste pour protéger Laura',
+                difficulty: 3,
+                maxPoints: 300,
+            },
+            sailor_moon_transfo: {
+                id: 'sailor_moon_transfo',
+                name: 'Prisme Lunaire',
+                film: 'Sailor Moon',
+                icon: '🌙',
+                type: 'sequence',
+                description: 'Reproduisez la séquence de transformation magique',
+                difficulty: 2,
+                maxPoints: 250,
+            },
+            olive_tom_tir: {
+                id: 'olive_tom_tir',
+                name: 'Tir de la Feuille Morte',
+                film: 'Olive et Tom',
+                icon: '⚽',
+                type: 'trajectory',
+                description: 'Calculez la trajectoire parfaite pour marquer',
+                difficulty: 4,
+                maxPoints: 400,
+            },
+        },
+    },
+
+    // 🎬 ANIMATION WORLD - La magie des studios
+    animation_world: {
+        id: 'animation_world',
+        name: 'MONDES ANIMÉS',
+        subtitle: 'Rêves et Imagination',
+        icon: '🎬',
+        image: '/images/universes/animationworld.png',
+        colors: {
+            primary: '#fbbf24',
+            secondary: '#1e1b4b',
+            accent: '#3b82f6',
+            glow: 'rgba(251, 191, 36, 0.5)',
+        },
+        background: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%)',
+        description: 'Plongez dans les chefs-d\'œuvre de l\'animation',
+        activities: {
+            lion_king_song: {
+                id: 'lion_king_song',
+                name: 'Hakuna Matata',
+                film: 'Le Roi Lion (Disney)',
+                icon: '🦁',
+                type: 'lyrics',
+                description: 'Complétez les paroles des chansons cultes',
+                difficulty: 2,
+                maxPoints: 300,
+            },
+            toy_story_andy: {
+                id: 'toy_story_andy',
+                name: 'Chambre d\'Andy',
+                film: 'Toy Story (Pixar)',
+                icon: '🤠',
+                type: 'observation',
+                description: 'Retrouvez les jouets cachés avant le retour d\'Andy',
+                difficulty: 2,
+                maxPoints: 250,
+            },
+            shrek_swamp: {
+                id: 'shrek_swamp',
+                name: 'Le Marais',
+                film: 'Shrek (Dreamworks)',
+                icon: '🧟‍♂️',
+                type: 'logic',
+                description: 'Aidez Shrek à chasser les créatures de conte de fées',
+                difficulty: 3,
+                maxPoints: 350,
+            },
+            chihiro_bath: {
+                id: 'chihiro_bath',
+                name: 'Le Bain des Esprits',
+                film: 'Le Voyage de Chihiro (Ghibli)',
+                icon: '🐉',
+                type: 'puzzle',
+                description: 'Nettoyez l\'Esprit Putride en trouvant les bons ingrédients',
+                difficulty: 4,
+                maxPoints: 400,
+            },
+        },
+    },
 };
 
 // Ordre d'affichage par défaut des univers
@@ -371,6 +491,8 @@ export const UNIVERSE_ORDER = [
     'mecanique_futur',
     'eres_perdues',
     'realites_alterees',
+    'club_dorothee',
+    'animation_world',
 ];
 
 // Types d'activités disponibles

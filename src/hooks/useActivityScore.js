@@ -1,157 +1,147 @@
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef } from 'react';
+import { useGame } from '../context/PlayerContext';
 
 /**
- * Hook de scoring standard pour les mini-jeux MultiversQuest
- * Gère le chronomètre, les tentatives et le calcul du score final.
+ * Hook Activity Engine Standardisé
+ * Gère l'état, le timer, les tentatives et le calcul de score selon le type d'activité.
+ * 
+ * @param {string} universeId - ID de l'univers cible
+ * @param {string} activityId - ID unique de l'activité
+ * @param {Object} options - Configuration de l'activité
+ * @param {number} options.maxPoints - Score maximum possible (défaut: 1000)
+ * @param {string} options.activityType - 'standard', 'sequence', 'quiz', 'time-attack'
+ * @param {function} options.onComplete - Callback de fin (succès ou échec)
  */
-export function useActivityScore({
-    maxPoints = 1000,
-    activityType = 'standard', // 'sequence', 'quiz', 'decode', 'standard'
-    onComplete = () => { }
-} = {}) {
+export function useActivityScore(universeId, activityId, options = {}) {
+    const { maxPoints = 1000, activityType = 'standard', onComplete } = options;
+    const { actions } = useGame();
+
     // État du jeu
     const [isPlaying, setIsPlaying] = useState(false);
     const [isCompleted, setIsCompleted] = useState(false);
-    const [startTime, setStartTime] = useState(null);
-    const [endTime, setEndTime] = useState(null);
-    const [attempts, setAttempts] = useState(0); // Nombre d'essais ou d'erreurs
-    const [clicks, setClicks] = useState(0);     // Nombre d'actions utilisateur
     const [score, setScore] = useState(0);
+    const [bonus, setBonus] = useState(0); // Bonus affiché séparément
 
-    // Refs pour les valeurs qui ne déclenchent pas de re-render (si nécessaire)
-    const timerRef = useRef(null);
+    // Stats internes pour le calcul
+    const stats = useRef({
+        startTime: null,
+        endTime: null,
+        attempts: 0,
+        errors: 0,
+        clicks: 0, // Pour le type sequence/clics
+    });
 
     /**
-     * Démarre l'activité et le chronomètre
+     * Démarre l'activité (lance le timer)
      */
-    const startActivity = () => {
+    const startActivity = useCallback(() => {
         setIsPlaying(true);
         setIsCompleted(false);
-        setStartTime(Date.now());
-        setEndTime(null);
-        setAttempts(0);
-        setClicks(0);
         setScore(0);
-    };
+        setBonus(0);
+        stats.current = {
+            startTime: Date.now(),
+            endTime: null,
+            attempts: 0,
+            errors: 0,
+            clicks: 0,
+        };
+    }, []);
 
     /**
-     * Enregistre une interaction (clic, action, essai)
-     * @param {boolean} isError - Si l'action était une erreur
+     * Enregistre une action (clic, essai, erreur)
+     * @param {boolean} isError - Si l'action est une erreur
      */
-    const recordAction = (isError = false) => {
+    const recordAction = useCallback((isError = false) => {
         if (!isPlaying) return;
-        setClicks(prev => prev + 1);
+
         if (isError) {
-            setAttempts(prev => prev + 1);
+            stats.current.errors += 1;
         }
-    };
+        stats.current.clicks += 1;
+        stats.current.attempts += 1;
+    }, [isPlaying]);
 
     /**
      * Termine l'activité et calcule le score final
-     * @param {boolean} success - Si l'activité a été réussie
-     * @param {object} metadata - Données supplémentaires pour le calcul (ex: niveau de difficulté)
+     * @param {boolean} success - Si l'activité est réussie
+     * @param {number} customBonus - Bonus manuel (optionnel, s'ajoute au calcul)
      */
-    const finalizeActivity = (success = true, metadata = {}) => {
-        if (!isPlaying && !startTime) return; // Déjà fini ou pas commencé
+    const finalizeActivity = useCallback((success, customBonus = 0) => {
+        if (!isPlaying && !success) return; // On peut forcer la fin même si pas "playing" (ex: debug)
 
-        const end = Date.now();
-        setEndTime(end);
-        setIsPlaying(false);
-        setIsCompleted(true);
+        const endTime = Date.now();
+        stats.current.endTime = endTime;
+        const duration = (endTime - stats.current.startTime) / 1000; // secondes
 
-        if (!success) {
-            setScore(0);
-            onComplete({ score: 0, success: false });
-            return;
-        }
+        let finalScore = 0;
+        let calculatedBonus = customBonus;
 
-        // Calcul du score
-        const durationMs = end - startTime;
-        const durationSec = durationMs / 1000;
+        if (success) {
+            // Logique de scoring selon le type
+            switch (activityType) {
+                case 'sequence':
+                    // Type "Rencontre du 3e type" : pénalité par erreur, bonus de rapidité (clics)
+                    // Note: Le bonus de clics est souvent calculé par le composant parent et passé via customBonus
+                    // Ici on applique une petite pénalité de base pour les erreurs éventuelles
+                    finalScore = Math.max(0, maxPoints - (stats.current.errors * 50));
+                    break;
 
-        let calculatedScore = maxPoints;
+                case 'quiz':
+                    // Type QCM : Pourcentage de réussite (géré souvent en amont, ici simple placeholder)
+                    finalScore = maxPoints;
+                    break;
 
-        // Bonus/Malus selon le type d'activité
-        switch (activityType) {
-            case 'sequence': // Simon-like : pénalité par erreur, bonus de vitesse
-                // Pénalité exponentielle pour les erreurs
-                if (attempts > 0) {
-                    calculatedScore -= (attempts * 100);
-                }
+                case 'time-attack':
+                    // Plus c'est rapide, plus ça rapporte
+                    // Exemple : Max points si < 30s, puis décroissance
+                    const timePenalty = Math.max(0, (duration - 30) * 10);
+                    finalScore = Math.max(100, maxPoints - timePenalty);
+                    break;
 
-                // Bonus de vitesse si sans erreur majeure
-                if (attempts === 0 && durationSec < 30) {
-                    calculatedScore += 200;
-                }
-                break;
-
-            case 'quiz': // Questions : score basé sur les bonnes réponses (géré externe) ou temps
-                // Ici on suppose que maxPoints est le score parfait, on réduit par erreur
-                calculatedScore -= (attempts * (maxPoints / 10)); // 10% par erreur
-                break;
-
-            case 'decode': // Puzzle/Code : fortement basé sur le temps
-                // Perte de points par seconde après un seuil
-                const timeThreshold = 60; // secondes
-                if (durationSec > timeThreshold) {
-                    calculatedScore -= Math.floor(durationSec - timeThreshold) * 5;
-                }
-                // Pénalité par tentative erronée
-                calculatedScore -= (attempts * 50);
-                break;
-
-            default:
-                // Version standard : temps et erreurs simples
-                calculatedScore -= (attempts * 50);
-                break;
-        }
-
-        // Le score ne peut pas être négatif
-        const finalScore = Math.max(0, Math.round(calculatedScore));
-        setScore(finalScore);
-
-        onComplete({
-            score: finalScore,
-            success: true,
-            stats: {
-                duration: durationMs,
-                attempts,
-                clicks
+                case 'standard':
+                default:
+                    // Score fixe moins pénalités
+                    finalScore = Math.max(100, maxPoints - (stats.current.errors * 20));
+                    break;
             }
-        });
-    };
 
-    /**
-     * Formate le temps écoulé pour l'affichage
-     */
-    const getFormattedTime = () => {
-        if (!startTime) return "00:00";
-        const end = endTime || Date.now();
-        const duration = Math.floor((end - startTime) / 1000);
-        const mins = Math.floor(duration / 60).toString().padStart(2, '0');
-        const secs = (duration % 60).toString().padStart(2, '0');
-        return `${mins}:${secs}`;
-    };
+            // Ajouter le bonus externe (ex: rapidité spécifique)
+            finalScore += calculatedBonus;
+        }
 
-    // Timer pour mettre à jour l'interface si besoin (optionnel, peut être géré par le composant)
-    // Ici on ne force pas le re-render chaque seconde pour la performance, 
-    // le composant parent peut utiliser son propre RAF ou setInterval pour l'affichage.
+        setScore(finalScore);
+        setBonus(calculatedBonus);
+        setIsCompleted(true);
+        setIsPlaying(false);
+
+        // Sauvegarde globale (si succès)
+        if (success && actions && actions.completeActivity) {
+            actions.completeActivity(universeId, activityId, finalScore);
+        }
+
+        if (onComplete) {
+            onComplete({
+                success,
+                score: finalScore,
+                stats: { ...stats.current, duration }
+            });
+        }
+
+    }, [isPlaying, activityType, maxPoints, actions, universeId, activityId, onComplete]);
 
     return {
         // États
         isPlaying,
         isCompleted,
         score,
-        attempts,
-        clicks,
+        bonus,
+        stats: stats.current,
 
         // Actions
         startActivity,
         recordAction,
-        finalizeActivity,
-
-        // Helpers
-        getFormattedTime
+        finalizeActivity
     };
 }

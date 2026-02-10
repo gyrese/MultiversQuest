@@ -25,24 +25,39 @@ Ce document recense l'ensemble des tâches pour transformer le prototype actuel 
 
 Le serveur le "Cerveau" du Multivers. Il gère l'état global, les scores en temps réel et la synchronisation des événements.
 
-### Core Server
-- [ ] **Initialisation Serveur** : Mettre en place un serveur Express + Socket.io.
-- [ ] **Gestion des Équipes** :
-    - [ ] API Création d'équipe (Nom, Avatar/Univers, Membres).
-    - [ ] Stockage en mémoire (ou SQLite/Redis) de l'état des équipes.
-- [ ] **Système de Scoring Temps Réel** :
-    - [ ] Endpoint `POST /score` sécurisé pour valider la fin d'une activité.
-    - [ ] Diffusion (Broadcast) automatique du classement à tous les clients connectés.
-- [ ] **Game State Manager** :
-    - [ ] Gestion des phases globales (Lobby, Jeu En Cours, Pause, Fin).
-    - [ ] Trigger d'événements narratifs globaux (ex: "Glitch Universel").
+### Core Server ✅
+- [x] **Initialisation Serveur** : Express + Socket.io configuré avec CORS.
+- [x] **Gestion des Équipes** :
+    - [x] API Création d'équipe `POST /api/teams` (Nom, Avatar, Membres).
+    - [x] API Liste équipes `GET /api/teams` et détails `GET /api/teams/:id`.
+    - [x] Stockage en mémoire + Persistance JSON automatique (`game_state.json`).
+    - [x] Suppression équipe (Admin) `DELETE /api/teams/:id`.
+- [x] **Système de Scoring Temps Réel** :
+    - [x] Endpoint `POST /api/score` sécurisé avec token équipe + anti-triche (cooldown).
+    - [x] Endpoint `POST /api/score/adjust` (Admin) pour ajustements manuels.
+    - [x] `GET /api/leaderboard` pour le classement.
+    - [x] Diffusion (Broadcast) automatique via `score:update` et `teams:update`.
+- [x] **Game State Manager** :
+    - [x] Gestion des statuts: LOBBY → PLAYING → PAUSED → ENDED.
+    - [x] Gestion des phases narratives: INITIALISATION → ANOMALIES → CONVERGENCE → EPILOGUE.
+    - [x] Transitions automatiques basées sur le temps.
+    - [x] API `POST /api/game/status` et `POST /api/game/phase` (Admin).
+- [x] **Événements Scénaristiques** :
+    - [x] API `POST /api/game/event` pour déclencher des événements.
+    - [x] 5 événements prédéfinis (GLITCH_UNIVERSEL, ALERTE_ROUGE, BONUS_COSMIQUE, etc.).
+    - [x] Système d'effets visuels actifs avec auto-expiration.
+    - [x] Broadcast `scenario:event` et `scenario:effectEnd`.
 
-### Game Master Interface (Admin)
-- [ ] **Panel Admin** : Une interface pour le maître du jeu.
-    - [ ] Voir les équipes connectées.
-    - [ ] Lancer/Arrêter le timer global.
-    - [ ] **Boutons "Scénario"** : Déclencher manuellement des événements (ex: "Invasion Bowser", "Panne de courant").
-    - [ ] Ajouter/Retirer des points manuellement (arbitrage).
+### Game Master Interface (Admin) ✅
+- [x] **Panel Admin** : Interface complète pour le maître du jeu (`/admin` ou `/gm`).
+    - [x] Voir les équipes connectées avec état (online/offline).
+    - [x] Lancer/Arrêter/Pause/Reprendre le jeu.
+    - [x] Timer global avec préréglages (15min, 30min, 1h...) et ajustement +/- 5min.
+    - [x] **Boutons "Scénario"** : 6 événements prédéfinis (Glitch, Alerte Rouge, Bonus Cosmique, Invasion Bowser, etc.).
+    - [x] Ajouter/Retirer des points manuellement (arbitrage) avec montant personnalisable.
+    - [x] Supprimer une équipe.
+    - [x] Historique des activités en temps réel.
+    - [x] Réinitialisation complète du jeu (avec confirmation).
 
 ---
 
@@ -50,13 +65,15 @@ Le serveur le "Cerveau" du Multivers. Il gère l'état global, les scores en tem
 
 L'interface utilisée par les participants pour naviguer et jouer.
 
-### Navigation & UX
-- [ ] **Intégration du Router** : Mettre en place `react-router` pour gérer les vues (Login -> Hub -> Activité).
-- [ ] **Team Login** : Écran de connexion/création d'équipe au lancement.
-- [ ] **Refonte du Hub** :
-    - [ ] Afficher le score actuel de l'équipe en permanence.
-    - [ ] Liste des univers débloqués/bloqués.
-    - [ ] Indicateur de "Destination Suivante" (fil d'ariane).
+### Navigation & UX ✅
+- [x] **Intégration du Router** : Navigation interne (Login → Hub → Activité) avec AnimatePresence.
+- [x] **Team Login** : Écran de connexion avec création d'équipe via API serveur + persistance localStorage.
+- [x] **Refonte du Hub** :
+    - [x] Afficher le score actuel de l'équipe + rang en temps réel.
+    - [x] Timer global synchronisé avec le serveur.
+    - [x] Liste des univers avec état (débloqué/verrouillé/complété).
+    - [x] Barre de progression par univers.
+    - [x] Affichage de la phase de jeu (Convergence = points x2, etc.).
 
 ### Activités (Gameplay)
 - [ ] **Migration Activité** : Convertir les prototypes existants pour utiliser `ActivityShell` et `useActivityScore`.

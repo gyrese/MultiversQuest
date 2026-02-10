@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e1b4b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#312e81;stop-opacity:1" />
+    </linearGradient>
+    <radialGradient id="star" x1="50%" y1="50%" x2="55%" y2="55%">
+      <stop offset="0%" style="stop-color:white;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:transparent;stop-opacity:1" />
+    </radialGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bg2)" />
+  
+  <!-- Stars -->
+  <circle cx="100" cy="100" r="2" fill="white" />
+  <circle cx="200" cy="50" r="3" fill="white" />
+  <circle cx="500" cy="80" r="1" fill="white" />
+  <circle cx="700" cy="200" r="2" fill="white" />
+  <circle cx="600" cy="400" r="1" fill="white" />
+  <circle cx="300" cy="500" r="2" fill="white" />
+  
+  <!-- Main Element -->
+  <text x="400" y="300" dominant-baseline="middle" text-anchor="middle" font-size="200">🎬</text>
+  
+  <!-- Symbols -->
+  <text x="150" y="150" font-size="100">🦁</text> <!-- Lion King -->
+  <text x="650" y="150" font-size="100">🤠</text> <!-- Toy Story -->
+  <text x="150" y="450" font-size="100">🧟‍♂️</text> <!-- Shrek -->
+  <text x="650" y="450" font-size="100">🐉</text> <!-- Chihiro -->
+  
+  <!-- Magical Dust -->
+  <path d="M200 300 Q400 200 600 300" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="5 5" opacity="0.5" />
+
+</svg>
