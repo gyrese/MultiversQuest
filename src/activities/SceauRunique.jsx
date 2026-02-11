@@ -36,19 +36,6 @@ const RUNES = [
         difficulty: 2
     },
     {
-        id: 'othala',
-        name: 'OTHALA',
-        hint: 'Héritage',
-        color: '#8b5cf6', // Violet
-        // Forme de losange avec "pieds"
-        svgPath: "M 30 90 L 50 10 L 70 90 M 30 90 L 50 50 L 70 90", // Simplifié en croix de losange
-        // Version classique Othala : Boucle en bas
-        svgPath: "M 30 90 L 50 50 L 70 90 M 50 50 L 50 10 M 50 10 L 30 30 M 50 10 L 70 30", // Trop complexe
-        // Othala standard : Losange qui se croise en bas
-        svgPath: "M 35 85 L 35 30 L 65 30 L 65 85 L 35 50 L 65 50", // Bof
-        // Allons sur le Sceau de Salomon (2 triangles inversés) ou Triskel
-        // Valknut (3 triangles) - Trop dur
-        // Eclair Harry Potter (Sowilo)
         id: 'sowilo',
         name: 'SOWILO',
         hint: 'Soleil et Victoire',
