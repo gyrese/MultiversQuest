@@ -16,6 +16,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Serve Vite build output (production)
+const distPath = path.join(__dirname, '..', 'dist');
+app.use(express.static(distPath));
+
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
@@ -868,6 +872,11 @@ function getGameStateForTeam(teamId) {
 // ============================================
 // 🚀 DÉMARRAGE DU SERVEUR
 // ============================================
+
+// SPA catch-all: toutes les routes non-API renvoient index.html
+app.get('*', (req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+});
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, '0.0.0.0', () => {
