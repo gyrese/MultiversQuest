@@ -874,7 +874,7 @@ function getGameStateForTeam(teamId) {
 // ============================================
 
 // SPA catch-all: toutes les routes non-API renvoient index.html
-app.get('*', (req, res) => {
+app.get('/{*path}', (req, res) => {
     res.sendFile(path.join(distPath, 'index.html'));
 });
 
