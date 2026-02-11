@@ -86,7 +86,7 @@ export default function Dashboard() {
                                     <div key={team.id} className={`p-3 border-l-2 ${i < 3 ? 'border-yellow-500 bg-yellow-500/10' : 'border-gray-700 bg-gray-900/50'}`}>
                                         <div className="flex justify-between items-center">
                                             <span className="text-xs text-gray-500">TIE-{String(i + 1).padStart(2, '0')}</span>
-                                            <span className="font-bold">{team.score.toLocaleString()}</span>
+                                            <span className="font-bold">{(team.score || 0).toLocaleString()}</span>
                                         </div>
                                         <div className="font-bold text-lg truncate">{team.name}</div>
                                     </div>

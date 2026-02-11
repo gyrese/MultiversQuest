@@ -44,6 +44,16 @@ export const UNIVERSES = {
                 difficulty: 2,
                 maxPoints: 250,
             },
+            kessel_run: {
+                id: 'kessel_run',
+                name: 'La Route de Kessel',
+                film: 'Solo: A Star Wars Story',
+                icon: '🏎️',
+                type: 'navigation',
+                description: 'Pilotez le Faucon Millenium à travers le raid de Kessel en moins de 12 parsecs',
+                difficulty: 3,
+                maxPoints: 600,
+            },
             alien_survie: {
                 id: 'alien_survie',
                 name: 'Survivre au Nostromo',

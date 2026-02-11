@@ -8,16 +8,18 @@ import { useState, useEffect, Suspense, lazy } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGame } from './context/GameContext';
 import { PlayerProvider, useGame as usePlayerGame } from './context/PlayerContext';
-import { AVATAR_STYLES, getAvatarUrl } from './utils/avatars';
+import { getAvatarUrl } from './utils/avatars';
 import Hub from './components/Hub';
 import './index.css';
 import DebugPanel from './components/debug/DebugPanel';
+import TeamAvatar from './components/TeamAvatar';
 
 // Lazy load activities pour optimiser le bundle initial
 const Rencontre3eType = lazy(() => import('./activities/Rencontre3eType.jsx'));
 const JurassicHack = lazy(() => import('./activities/JurassicHack.jsx'));
 const SceauRunique = lazy(() => import('./activities/SceauRunique.jsx'));
 const TenetInversion = lazy(() => import('./activities/TenetInversion.jsx'));
+const KesselRun = lazy(() => import('./activities/KesselRun.jsx'));
 
 // Map des composants d'activité
 // Les clés doivent correspondre aux IDs utilisés dans les données de l'univers
@@ -26,6 +28,7 @@ const ACTIVITY_MAP = {
   'jurassic_hack': JurassicHack,
   'sceau_runique': SceauRunique,
   'tenet_inversion': TenetInversion,
+  'kessel_run': KesselRun,
 };
 
 // ============================================
@@ -51,7 +54,7 @@ function LoadingSpinner({ message = "Chargement..." }) {
 function TeamLogin({ onJoinSuccess }) {
   const { connected, createTeam, gameState } = useGame();
   const [teamName, setTeamName] = useState('');
-  const [selectedStyle, setSelectedStyle] = useState(AVATAR_STYLES[0]);
+
   const [isJoining, setIsJoining] = useState(false);
   const [error, setError] = useState(null);
 
@@ -82,7 +85,7 @@ function TeamLogin({ onJoinSuccess }) {
     setIsJoining(true);
     setError(null);
 
-    const result = await createTeam(teamName.trim(), selectedStyle.id);
+    const result = await createTeam(teamName.trim(), 'pollinations');
 
     if (result.error) {
       setError(result.error);
@@ -92,19 +95,18 @@ function TeamLogin({ onJoinSuccess }) {
       localStorage.setItem('teamId', result.teamId);
       localStorage.setItem('teamToken', result.token);
       localStorage.setItem('teamName', teamName.trim());
-      localStorage.setItem('teamAvatarStyle', selectedStyle.id);
+      localStorage.setItem('teamAvatarStyle', 'pollinations');
 
       onJoinSuccess({
         teamId: result.teamId,
         token: result.token,
         name: teamName.trim(),
-        avatarStyle: selectedStyle.id
+        avatarStyle: 'pollinations'
       });
     }
   };
 
-  // URL de l'avatar prévisualisé
-  const previewAvatarUrl = getAvatarUrl(teamName || 'Preview', selectedStyle.id, 128);
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0a15] via-[#0f0f1f] to-[#0a0a15] text-white">
@@ -229,68 +231,24 @@ function TeamLogin({ onJoinSuccess }) {
                 />
               </div>
 
-              {/* Sélection de Style d'Avatar + Prévisualisation */}
-              <div>
-                <label className="block text-gray-400 text-sm font-mono mb-3">
-                  Style d'avatar
-                </label>
-
-                {/* Prévisualisation de l'avatar généré */}
-                <div className="flex justify-center mb-4">
-                  <motion.div
-                    key={previewAvatarUrl}
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-cyan-500/50"
-                    style={{ boxShadow: '0 0 25px rgba(0,212,255,0.3)' }}
-                  >
-                    <img
-                      src={previewAvatarUrl}
-                      alt="Avatar Preview"
-                      className="w-full h-full object-cover"
-                    />
-                  </motion.div>
-                </div>
-
-                {/* Grille des styles */}
-                <div className="grid grid-cols-4 gap-2">
-                  {AVATAR_STYLES.map((style) => (
-                    <motion.button
-                      key={style.id}
-                      type="button"
-                      onClick={() => setSelectedStyle(style)}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className={`p-2 rounded-xl flex flex-col items-center justify-center gap-1 transition-all ${selectedStyle.id === style.id
-                        ? 'bg-gradient-to-br from-cyan-500/30 to-fuchsia-500/30 border-2 border-cyan-400'
-                        : 'bg-[#0a0a0f] border border-gray-800 hover:border-gray-600'
-                        }`}
-                      style={{
-                        boxShadow: selectedStyle.id === style.id
-                          ? '0 0 15px rgba(0,212,255,0.3)'
-                          : 'none'
-                      }}
-                      title={style.label}
-                    >
-                      <span className="text-lg">{style.icon}</span>
-                      <span className={`text-[10px] font-mono ${selectedStyle.id === style.id ? 'text-cyan-400' : 'text-gray-500'
-                        }`}>
-                        {style.label}
-                      </span>
-                    </motion.button>
-                  ))}
-                </div>
-
-                {/* Info style sélectionné */}
-                <motion.p
-                  key={selectedStyle.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="mt-3 text-center text-xs text-gray-500 font-mono"
+              {/* Prévisualisation de l'avatar généré */}
+              <div className="flex justify-center mb-6">
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="w-32 h-32 rounded-2xl overflow-hidden border-2 border-cyan-500/50 bg-black/40 relative shadow-[0_0_25px_rgba(0,212,255,0.3)]"
                 >
-                  💡 L'avatar change selon le nom de l'équipe
-                </motion.p>
+                  <TeamAvatar name={teamName || 'Team'} className="w-full h-full object-cover" />
+                </motion.div>
               </div>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-center text-xs text-cyan-400/70 font-mono mb-4"
+              >
+                ✨ Logo généré par I.A. à partir du nom
+              </motion.p>
 
               <motion.button
                 whileHover={{ scale: connected && teamName.trim() ? 1.02 : 1 }}

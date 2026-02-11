@@ -5,10 +5,11 @@
  * Inclut : Leaderboard animé, Activity Feed, Timer, Effets scénaristiques.
  */
 
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, useRef } from 'react';
 import { useGame } from '../context/GameContext';
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
+import WarRoom3DScene from '../components/warroom/WarRoom3DScene';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // CONFIGURATION
@@ -20,95 +21,7 @@ const NEXUS_URL = 'http://192.168.1.14:5174/nexus';
 // ANIMATED BACKGROUND - Grilles et Radars
 // ═══════════════════════════════════════════════════════════════════════════
 
-function AnimatedBackground() {
-    return (
-        <div className="fixed inset-0 pointer-events-none overflow-hidden">
-            {/* Grille cyberpunk */}
-            <div
-                className="absolute inset-0 opacity-10"
-                style={{
-                    backgroundImage: `
-                        linear-gradient(rgba(139, 92, 246, 0.3) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(139, 92, 246, 0.3) 1px, transparent 1px)
-                    `,
-                    backgroundSize: '50px 50px'
-                }}
-            />
 
-            {/* Cercles radar animés */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                {[1, 2, 3].map((i) => (
-                    <motion.div
-                        key={i}
-                        className="absolute border border-purple-500/20 rounded-full"
-                        style={{
-                            width: `${i * 400}px`,
-                            height: `${i * 400}px`,
-                            left: `${-i * 200}px`,
-                            top: `${-i * 200}px`,
-                        }}
-                        animate={{
-                            scale: [1, 1.1, 1],
-                            opacity: [0.2, 0.4, 0.2]
-                        }}
-                        transition={{
-                            duration: 4,
-                            delay: i * 0.5,
-                            repeat: Infinity,
-                            ease: 'easeInOut'
-                        }}
-                    />
-                ))}
-            </div>
-
-            {/* Lignes de données qui défilent */}
-            <div className="absolute top-0 left-0 w-full h-full">
-                {[...Array(5)].map((_, i) => (
-                    <motion.div
-                        key={i}
-                        className="absolute h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"
-                        style={{
-                            width: '30%',
-                            top: `${20 + i * 15}%`,
-                            left: '-30%'
-                        }}
-                        animate={{
-                            left: ['130%', '-30%']
-                        }}
-                        transition={{
-                            duration: 8 + i * 2,
-                            repeat: Infinity,
-                            ease: 'linear',
-                            delay: i * 1.5
-                        }}
-                    />
-                ))}
-            </div>
-
-            {/* Particules flottantes */}
-            {[...Array(20)].map((_, i) => (
-                <motion.div
-                    key={i}
-                    className="absolute w-1 h-1 bg-purple-400/50 rounded-full"
-                    style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                    }}
-                    animate={{
-                        y: [0, -30, 0],
-                        opacity: [0.2, 0.8, 0.2],
-                        scale: [1, 1.5, 1]
-                    }}
-                    transition={{
-                        duration: 3 + Math.random() * 2,
-                        repeat: Infinity,
-                        delay: Math.random() * 2
-                    }}
-                />
-            ))}
-        </div>
-    );
-}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // LEADERBOARD COMPONENT - Animated Rankings
@@ -197,7 +110,7 @@ function Leaderboard({ teams, lastScoringTeam }) {
                                         transition={{ duration: 0.5 }}
                                     >
                                         <div className={`text-3xl font-mono font-bold ${index === 0 ? 'text-yellow-400' : 'text-white'}`}>
-                                            {team.score.toLocaleString()}
+                                            {(team.score || 0).toLocaleString()}
                                         </div>
                                         <div className="text-xs text-white/40">pts</div>
                                     </motion.div>
@@ -477,6 +390,9 @@ export default function WarRoom() {
     const [unlockPopup, setUnlockPopup] = useState(null);
     const [lastScoringTeam, setLastScoringTeam] = useState(null);
 
+    // Ref vers la Scène 3D pour les effets
+    const scene3DRef = useRef();
+
     useEffect(() => {
         identify('WARROOM');
     }, [identify]);
@@ -485,6 +401,11 @@ export default function WarRoom() {
     const handleWarRoomCommand = useCallback((command) => {
         const { type, payload } = command;
         console.log('📺 WarRoom commande reçue:', type, payload);
+
+        // Déclencher l'effet 3D si la scène est prête
+        if (scene3DRef.current && scene3DRef.current.triggerCue) {
+            scene3DRef.current.triggerCue(type, payload);
+        }
 
         switch (type) {
             case 'TRIGGER_ALERT':
@@ -566,8 +487,7 @@ export default function WarRoom() {
 
     return (
         <div className="min-h-screen bg-[#030712] text-white font-sans overflow-hidden relative">
-            {/* Animated Background */}
-            <AnimatedBackground />
+
 
             {/* Scenario Overlays */}
             <AnimatePresence>
@@ -581,6 +501,9 @@ export default function WarRoom() {
                     />
                 )}
             </AnimatePresence>
+
+            {/* 3D Scene - Remplace l'AnimatedBackground 2D */}
+            <WarRoom3DScene onCueRef={scene3DRef} />
 
             {/* Main Content */}
             <div className="relative z-10 h-screen flex flex-col p-6">

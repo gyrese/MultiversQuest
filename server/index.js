@@ -113,6 +113,55 @@ app.get('/health', (req, res) => {
     });
 });
 
+// --- Génération d'avatar IA (Proxy vers Hugging Face) ---
+// Même pattern que generate.php : le serveur fait le call HF et renvoie le blob image
+const HF_TOKEN = process.env.HF_TOKEN || '';
+const HF_API_URL = 'https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell';
+
+app.post('/api/generate-avatar', async (req, res) => {
+    const { prompt } = req.body;
+
+    if (!prompt || typeof prompt !== 'string') {
+        return res.status(400).json({ error: 'Prompt requis' });
+    }
+
+    try {
+        const response = await fetch(HF_API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${HF_TOKEN}`,
+                'Accept': '*/*'
+            },
+            body: JSON.stringify({
+                inputs: prompt,
+                options: { wait_for_model: true }
+            })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`HF API Error (${response.status}):`, errorText);
+            return res.status(response.status).json({
+                error: `Hugging Face API error: ${response.status}`,
+                details: errorText
+            });
+        }
+
+        // Récupérer l'image binaire et la renvoyer au client
+        const contentType = response.headers.get('content-type') || 'image/png';
+        const buffer = await response.arrayBuffer();
+
+        res.set('Content-Type', contentType);
+        res.set('Cache-Control', 'public, max-age=86400'); // Cache 24h
+        res.send(Buffer.from(buffer));
+
+    } catch (err) {
+        console.error('Avatar generation proxy error:', err);
+        res.status(500).json({ error: 'Erreur serveur lors de la génération' });
+    }
+});
+
 // --- État complet (protégé pour Admin) ---
 app.get('/api/state', validateApiKey, (req, res) => {
     res.json(gameState);

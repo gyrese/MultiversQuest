@@ -28,7 +28,9 @@ export const AVATAR_STYLES = [
  */
 export const getAvatarUrl = (seed, style = 'bottts', size = 128) => {
     const encodedSeed = encodeURIComponent(seed || 'default');
-    return `https://api.dicebear.com/9.x/${style}/svg?seed=${encodedSeed}&size=${size}&backgroundColor=0a0a0f,1a1a2e,0f0f1f`;
+    // Utilisation de Pollinations.ai pour générer un logo d'équipe unique basé sur le nom
+    // On ajoute des mots-clés pour guider le style vers quelque chose de sci-fi/gaming
+    return `https://pollinations.ai/image/${encodedSeed}%20team%20logo%20badge%20sci-fi%20neon%20style%20minimalist%20vector%20art?width=${size}&height=${size}&nologo=true&seed=${encodedSeed}`;
 };
 
 /**

@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGame } from '../context/PlayerContext';
 import { UNIVERSES, UNIVERSE_ORDER } from '../data/universes';
-import { getAvatarUrl } from '../utils/avatars';
 import UniverseCard from './UniverseCard';
+import TeamAvatar from './TeamAvatar';
 
 export default function Hub({ onStartActivity }) {
     const { state, actions } = useGame();
@@ -136,9 +136,8 @@ export default function Hub({ onStartActivity }) {
                                 }}
                                 transition={{ duration: 3, repeat: Infinity }}
                             >
-                                <img
-                                    src={getAvatarUrl(state.teamName, state.avatarStyle || 'bottts', 96)}
-                                    alt={state.teamName}
+                                <TeamAvatar
+                                    name={state.teamName}
                                     className="w-full h-full object-cover"
                                 />
                                 {/* Holographic overlay */}

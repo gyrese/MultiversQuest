@@ -451,7 +451,7 @@ export default function AdminPanel() {
                                                 {team.connected ? '🟢' : '⚫'}
                                             </span>
                                         </div>
-                                        <div className="team-score">{team.score.toLocaleString()} pts</div>
+                                        <div className="team-score">{(team.score || 0).toLocaleString()} pts</div>
 
                                         {/* Actions Panel */}
                                         <AnimatePresence>

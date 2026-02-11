@@ -108,7 +108,19 @@ export function useActivityScore(universeId, activityId, options = {}) {
             }
 
             // Ajouter le bonus externe (ex: rapidité spécifique)
+            if (typeof calculatedBonus !== 'number' || isNaN(calculatedBonus)) {
+                console.warn('⚠️ useActivityScore: Bonus invalide, ignoré', calculatedBonus);
+                calculatedBonus = 0;
+            }
             finalScore += calculatedBonus;
+        }
+
+        // Sécurité anti-NaN
+        if (typeof finalScore !== 'number' || isNaN(finalScore)) {
+            console.error('⚠️ useActivityScore: Score final NaN détecté! Force à 0.', {
+                activityType, maxPoints, errors: stats.current.errors, duration, customBonus
+            });
+            finalScore = 0;
         }
 
         setScore(finalScore);
