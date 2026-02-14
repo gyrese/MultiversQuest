@@ -4,10 +4,12 @@ import { useGame } from '../context/PlayerContext';
 import { UNIVERSES, UNIVERSE_ORDER } from '../data/universes';
 import UniverseCard from './UniverseCard';
 import TeamAvatar from './TeamAvatar';
+import SaveTransferModal from './SaveTransferModal'; // Assurez-vous que le chemin est correct relative à Hub
 
 export default function Hub({ onStartActivity }) {
     const { state, actions } = useGame();
     const [showInventory, setShowInventory] = useState(false);
+    const [showExportModal, setShowExportModal] = useState(false);
     const [selectedUniverse, setSelectedUniverse] = useState(null);
     const [selectedActivity, setSelectedActivity] = useState(null);
 
@@ -217,6 +219,27 @@ export default function Hub({ onStartActivity }) {
                         >
                             🎒
                         </motion.button>
+
+                        {/* Export Profile */}
+                        <motion.button
+                            whileHover={{ scale: 1.1, rotate: -5 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => setShowExportModal(true)}
+                            className="w-11 h-11 ml-2 rounded-xl flex items-center justify-center text-xl transition-all"
+                            style={{
+                                background: 'rgba(255,0,255,0.1)',
+                                border: '1px solid rgba(255,0,255,0.2)',
+                            }}
+                        >
+                            💾
+                        </motion.button>
+
+                        {/* Modal Export */}
+                        <SaveTransferModal
+                            isOpen={showExportModal}
+                            onClose={() => setShowExportModal(false)}
+                            mode="export"
+                        />
                     </motion.div>
                 </div>
             </header>

@@ -375,6 +375,90 @@ export default function AdminPanel() {
                             Effets visuels sur l'écran <code>/warroom</code>
                         </p>
 
+                        {/* Theme Selection */}
+                        <div className="warroom-section">
+                            <label>🎨 Thème Visuel</label>
+                            <div className="button-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem' }}>
+                                {/* DÉFAUT */}
+                                <button
+                                    className={`btn`}
+                                    onClick={() => adminActions.setWarRoomTheme('default')}
+                                    style={{
+                                        background: gameState.themeUniverse === 'default' ? '#8e44ad' : 'rgba(255,255,255,0.1)',
+                                        gridColumn: 'span 2'
+                                    }}
+                                >
+                                    🌀 Défaut (Sci-Fi)
+                                </button>
+
+                                {/* SPACE MISSION (NEW) */}
+                                <button
+                                    className={`btn`}
+                                    onClick={() => adminActions.setWarRoomTheme('odyssee_spatiale')}
+                                    style={{
+                                        background: gameState.themeUniverse === 'odyssee_spatiale' ? '#0ea5e9' : 'rgba(255,255,255,0.05)',
+                                        color: gameState.themeUniverse === 'odyssee_spatiale' ? '#fff' : '#38bdf8',
+                                        border: '1px solid #38bdf8',
+                                        gridColumn: 'span 2'
+                                    }}
+                                >
+                                    🚀 Space Mission
+                                </button>
+
+                                {/* JURASSIC */}
+                                <button
+                                    className={`btn`}
+                                    onClick={() => adminActions.setWarRoomTheme('jurassic')}
+                                    style={{
+                                        background: gameState.themeUniverse === 'jurassic' ? '#27ae60' : 'rgba(255,255,255,0.05)',
+                                        color: gameState.themeUniverse === 'jurassic' ? '#fff' : '#2ecc71',
+                                        border: '1px solid #2ecc71'
+                                    }}
+                                >
+                                    🦖 Jurassic
+                                </button>
+
+                                {/* POST-APO */}
+                                <button
+                                    className={`btn`}
+                                    onClick={() => adminActions.setWarRoomTheme('post_apo')}
+                                    style={{
+                                        background: gameState.themeUniverse === 'post_apo' ? '#ea580c' : 'rgba(255,255,255,0.05)',
+                                        color: gameState.themeUniverse === 'post_apo' ? '#fff' : '#fb923c',
+                                        border: '1px solid #fb923c'
+                                    }}
+                                >
+                                    ☢️ Post-Apo
+                                </button>
+
+                                {/* MARIO */}
+                                <button
+                                    className={`btn`}
+                                    onClick={() => adminActions.setWarRoomTheme('mario')}
+                                    style={{
+                                        background: gameState.themeUniverse === 'mario' ? '#e52521' : 'rgba(255,255,255,0.05)',
+                                        color: gameState.themeUniverse === 'mario' ? '#fff' : '#f87171',
+                                        border: '1px solid #f87171'
+                                    }}
+                                >
+                                    🍄 Mario (8-bit)
+                                </button>
+
+                                {/* FANTASY */}
+                                <button
+                                    className={`btn`}
+                                    onClick={() => adminActions.setWarRoomTheme('fantasy')}
+                                    style={{
+                                        background: gameState.themeUniverse === 'fantasy' ? '#d4af37' : 'rgba(255,255,255,0.05)',
+                                        color: gameState.themeUniverse === 'fantasy' ? '#fff' : '#fcd34d',
+                                        border: '1px solid #fcd34d'
+                                    }}
+                                >
+                                    ⚔️ Fantasy
+                                </button>
+                            </div>
+                        </div>
+
                         {/* Alerte Rouge */}
                         <div className="warroom-section">
                             <label>🚨 Alerte Rouge</label>
@@ -1081,6 +1165,6 @@ export default function AdminPanel() {
                     }
                 }
             `}</style>
-        </div>
+        </div >
     );
 }

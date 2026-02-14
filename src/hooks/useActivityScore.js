@@ -1,6 +1,7 @@
 
 import { useState, useCallback, useRef } from 'react';
 import { useGame } from '../context/PlayerContext';
+import { useGame as useGlobalGame } from '../context/GameContext';
 
 /**
  * Hook Activity Engine Standardisé
@@ -16,6 +17,7 @@ import { useGame } from '../context/PlayerContext';
 export function useActivityScore(universeId, activityId, options = {}) {
     const { maxPoints = 1000, activityType = 'standard', onComplete } = options;
     const { actions } = useGame();
+    const { submitScore } = useGlobalGame();
 
     // État du jeu
     const [isPlaying, setIsPlaying] = useState(false);
@@ -129,8 +131,18 @@ export function useActivityScore(universeId, activityId, options = {}) {
         setIsPlaying(false);
 
         // Sauvegarde globale (si succès)
-        if (success && actions && actions.completeActivity) {
-            actions.completeActivity(universeId, activityId, finalScore);
+        if (success) {
+            // 1. Mise à jour Locale (Client)
+            if (actions && actions.completeActivity) {
+                actions.completeActivity(universeId, activityId, finalScore);
+            }
+            // 2. Mise à jour Serveur (Socket)
+            if (submitScore) {
+                console.log(`📤 Sending score to server: ${universeId}/${activityId} = ${finalScore}`);
+                submitScore(universeId, activityId, finalScore, true);
+            } else {
+                console.error("❌ Cannot submit score: GameContext not available or not connected");
+            }
         }
 
         if (onComplete) {
@@ -141,7 +153,7 @@ export function useActivityScore(universeId, activityId, options = {}) {
             });
         }
 
-    }, [isPlaying, activityType, maxPoints, actions, universeId, activityId, onComplete]);
+    }, [isPlaying, activityType, maxPoints, actions, universeId, activityId, onComplete, submitScore]);
 
     return {
         // États

@@ -11,8 +11,19 @@ const GameContext = createContext(null);
 export default GameProvider;
 
 // URL du serveur (à configurer selon l'env)
-// Utilisation de l'IP directe pour le dev mobile sans redémarrage
-const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://192.168.1.14:3000';
+// URL du serveur (dynamique pour le support mobile/LAN)
+const getSocketUrl = () => {
+    // Si une URL spécifique est définie dans .env (ex: production), l'utiliser
+    if (import.meta.env.VITE_SERVER_URL && import.meta.env.VITE_SERVER_URL !== 'http://localhost:3000') {
+        return import.meta.env.VITE_SERVER_URL;
+    }
+    // Sinon, construire l'URL basée sur l'hôte actuel (permet l'accès via IP locale sur mobile)
+    if (typeof window !== 'undefined') {
+        return `${window.location.protocol}//${window.location.hostname}:3000`;
+    }
+    return 'http://localhost:3000';
+};
+const SERVER_URL = getSocketUrl();
 
 export function GameProvider({ children }) {
     const [socket, setSocket] = useState(null);
@@ -25,7 +36,8 @@ export function GameProvider({ children }) {
         globalTimer: 3600,
         activeEffects: [],
         ranking: [],
-        config: { pointsMultiplier: 1 }
+        config: { pointsMultiplier: 1 },
+        themeUniverse: 'default' // 'default', 'jurassic', 'post_apo', etc.
     });
 
     const [currentTeam, setCurrentTeam] = useState(null);
@@ -45,6 +57,8 @@ export function GameProvider({ children }) {
         newSocket.on('connect', () => {
             console.log('✅ Connecté au serveur:', newSocket.id);
             setConnected(true);
+            // Demander l'état complet actuel (statut, phases, équipes...)
+            newSocket.emit('request:fullState');
         });
 
         newSocket.on('disconnect', () => {
@@ -120,7 +134,26 @@ export function GameProvider({ children }) {
             setGameState(prev => ({ ...prev, status: 'ENDED', ranking }));
         });
 
+        newSocket.on('warroom:theme', (theme) => {
+            console.log('🎨 Nouveau thème WarRoom:', theme);
+            setGameState(prev => ({ ...prev, themeUniverse: theme }));
+        });
+
         newSocket.on('game:reset', () => {
+            console.warn("🔄 Réinitialisation de la partie par l'Admin");
+
+            // Éjecter les joueurs
+            if (role === 'TEAM') {
+                localStorage.removeItem('teamId');
+                localStorage.removeItem('teamToken');
+                localStorage.removeItem('teamName');
+                localStorage.removeItem('teamAvatarStyle');
+                setCurrentTeam(null);
+                setRole(null);
+                // Force reload pour nettoyer l'UI Nexus
+                window.location.reload();
+            }
+
             setGameState({
                 teams: {},
                 history: [],
@@ -129,13 +162,17 @@ export function GameProvider({ children }) {
                 globalTimer: 3600,
                 activeEffects: [],
                 ranking: [],
-                config: { pointsMultiplier: 1 }
+                config: { pointsMultiplier: 1 },
+                themeUniverse: 'default'
             });
         });
 
         // Nettoyage
         return () => newSocket.close();
     }, []);
+
+
+
 
     // === ACTIONS GÉNÉRALES ===
 
@@ -168,18 +205,86 @@ export function GameProvider({ children }) {
         }
     }, [identify]);
 
-    const submitScore = useCallback((universeId, activityId, points, success, metadata = {}) => {
-        if (!socket || !currentTeam) return;
-        socket.emit('activity:complete', {
-            teamId: currentTeam,
-            token: localStorage.getItem('teamToken'),
-            universeId,
-            activityId,
-            points,
-            success,
-            metadata
-        });
-    }, [socket, currentTeam]);
+    // Soumission de score via API REST (Plus robuste que Socket seul)
+    const submitScore = useCallback(async (universeId, activityId, points, success, metadata = {}) => {
+        const teamId = localStorage.getItem('teamId');
+        const token = localStorage.getItem('teamToken');
+
+        if (!teamId || !token) {
+            console.error("❌ submitScore: Identifiants manquants (teamId/token)");
+            return false;
+        }
+
+        console.log(`📤 Envoi score (API): ${universeId}/${activityId} = ${points}pts`);
+
+        try {
+            const response = await fetch(`${SERVER_URL}/api/score`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    teamId,
+                    token,
+                    universeId,
+                    activityId,
+                    points,
+                    success,
+                    metadata
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                console.log("✅ Score validé par serveur:", data);
+                // Le serveur va émettre un socket event 'score:update' qui mettra à jour le state local
+                return true;
+            } else {
+                console.warn("⚠️ Refus serveur:", data.error);
+
+                // GESTION SESSION PERDUE (Serveur restart ou corruption)
+                if (response.status === 403 || data.error === 'Token équipe invalide' || data.error === 'API Key invalide') {
+                    console.error("⛔ Session invalide. Reset.");
+                    localStorage.removeItem('teamId');
+                    localStorage.removeItem('teamToken');
+                    setCurrentTeam(null);
+                    setRole(null);
+                    // Force reload pour retourner au Lobby
+                    alert("⚠️ Session expirée suite à une maintenance.\nVeuillez recréer votre équipe.");
+                    window.location.href = '/';
+                }
+                return false;
+            }
+        } catch (error) {
+            console.error("❌ Erreur réseau submitScore:", error);
+            // Fallback Socket si HTTP fail, mais c'est rare
+            if (socket && socket.connected) {
+                console.log("⚠️ Tentative fallback Socket...");
+                socket.emit('activity:complete', { teamId, token, universeId, activityId, points, success, metadata });
+            }
+            return false;
+        }
+    }, [SERVER_URL, socket]);
+
+    // Restauration de session automatique (Placé après identify/submitScore pour éviter ReferenceError)
+    useEffect(() => {
+        if (socket && connected) {
+            // Identifier le rôle basé sur l'URL ou le stockage
+            const path = window.location.pathname;
+            if (path.includes('/warroom')) {
+                identify('WARROOM');
+            } else if (path.includes('/admin')) {
+                identify('ADMIN');
+            } else {
+                // Tenter de restaurer une session équipe
+                const savedTeamId = localStorage.getItem('teamId');
+                const savedToken = localStorage.getItem('teamToken');
+                if (savedTeamId && savedToken) {
+                    console.log("🔄 Restauration session équipe:", savedTeamId);
+                    identify('TEAM', savedTeamId);
+                }
+            }
+        }
+    }, [socket, connected, identify]);
 
     // === ACTIONS ADMIN ===
 
@@ -241,6 +346,15 @@ export function GameProvider({ children }) {
             });
         },
 
+        // Changer le thème du WarRoom
+        setWarRoomTheme: (theme) => {
+            if (!socket) return;
+            socket.emit('admin:action', {
+                type: 'SET_THEME',
+                payload: { theme }
+            });
+        },
+
         // Réinitialiser le jeu (via API REST)
         resetGame: async () => {
             try {
@@ -287,6 +401,26 @@ export function GameProvider({ children }) {
         return Object.values(gameState.teams)
             .sort((a, b) => b.score - a.score);
     }, [gameState.teams]);
+
+    // Restauration de session automatique (Correctement placée après identify)
+    useEffect(() => {
+        if (!socket || !connected) return;
+
+        if (role) return;
+
+        const storedTeamId = localStorage.getItem('teamId');
+        if (storedTeamId) {
+            console.log('🔄 Restauration de session Équipe:', storedTeamId);
+            identify('TEAM', storedTeamId);
+            return;
+        }
+
+        const adminToken = localStorage.getItem('adminToken');
+        if (adminToken) {
+            console.log('🔄 Restauration de session Admin');
+            identify('ADMIN');
+        }
+    }, [socket, connected, identify, role]);
 
     // Valeur exposée
     const value = useMemo(() => ({

@@ -30,6 +30,31 @@ body {
   font-family: var(--font-body);
   overflow-x: hidden;
   min-height: 100vh;
+  /* Prevent pull-to-refresh and bouncy scrolling on mobile */
+  overscroll-behavior: none;
+}
+
+/* =============================================
+   MOBILE GAME LOCKING
+   Prevents screen movement while playing
+   ============================================= */
+
+canvas {
+  touch-action: none !important;
+  user-select: none;
+  -webkit-user-select: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.game-container-locked {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: none;
 }
 
 /* =============================================

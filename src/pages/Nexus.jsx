@@ -2,13 +2,17 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGame } from '../context/GameContext';
 
+import RoyaumesLegendairesView from '../components/universes/RoyaumesLegendairesView';
+
 // Universe data
 const UNIVERSES = [
+    { id: 'royaumes_legendaires', name: 'Royaumes Légendaires', icon: '🏰', color: 'from-amber-700 to-emerald-900', description: 'Magie et aventures épiques' },
     { id: 'starwars', name: 'Star Wars', icon: '⭐', color: 'from-yellow-500 to-amber-600', description: 'Une galaxie très lointaine...' },
     { id: 'jurassic', name: 'Jurassic Park', icon: '🦖', color: 'from-green-500 to-emerald-600', description: 'La vie trouve son chemin' },
     { id: 'mario', name: 'Super Mario', icon: '🍄', color: 'from-red-500 to-orange-500', description: "C'est-a moi, Mario!" },
     { id: 'harry', name: 'Harry Potter', icon: '⚡', color: 'from-amber-500 to-yellow-600', description: 'Poudlard vous attend' },
     { id: 'matrix', name: 'The Matrix', icon: '💊', color: 'from-green-400 to-lime-500', description: 'Pilule rouge ou bleue?' },
+    { id: 'post_apo', name: 'Terres Désolées', icon: '☢️', color: 'from-orange-600 to-stone-900', description: 'Survivre à l\'apocalypse' },
 ];
 
 export default function Nexus() {
@@ -18,6 +22,7 @@ export default function Nexus() {
     const [isJoining, setIsJoining] = useState(false);
     const [showTeamCreation, setShowTeamCreation] = useState(true);
     const [currentTeam, setCurrentTeam] = useState(null);
+    const [selectedUniverse, setSelectedUniverse] = useState(null);
 
     useEffect(() => {
         identify('NEXUS');
@@ -38,26 +43,33 @@ export default function Nexus() {
 
         setIsJoining(true);
 
-        const teamId = `team_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-        const team = {
-            id: teamId,
-            name: teamName.trim(),
-            createdAt: new Date().toISOString(),
-            score: 0
-        };
-
-        localStorage.setItem('multiversquest_team', JSON.stringify(team));
-
         if (createTeam) {
-            createTeam(team.id, team.name);
-        }
+            // Appeler le serveur pour créer l'équipe et obtenir le VRAI ID
+            const result = await createTeam(teamName.trim());
 
-        setTimeout(() => {
-            setCurrentTeam(team);
-            setShowTeamCreation(false);
-            setIsJoining(false);
-        }, 1000);
+            if (result && result.teamId) {
+                const team = {
+                    id: result.teamId,
+                    name: teamName.trim(),
+                    token: result.token,
+                    createdAt: new Date().toISOString(),
+                    score: 0
+                };
+
+                // Sauvegarder l'équipe synchronisée
+                localStorage.setItem('multiversquest_team', JSON.stringify(team));
+
+                setTimeout(() => {
+                    setCurrentTeam(team);
+                    setShowTeamCreation(false);
+                    setIsJoining(false);
+                }, 1000);
+            } else {
+                console.error("Erreur création équipe:", result?.error);
+                setIsJoining(false);
+                // Gérer l'erreur (ex: afficher un message)
+            }
+        }
     };
 
     const handleResetTeam = () => {
@@ -65,11 +77,19 @@ export default function Nexus() {
         setCurrentTeam(null);
         setShowTeamCreation(true);
         setTeamName('');
+        setSelectedUniverse(null);
     };
 
     // Get team score from server state
     const teamData = currentTeam && gameState.teams[currentTeam.id];
     const score = teamData?.score || currentTeam?.score || 0;
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // UNIVERSE VIEW - Specific styling for selected universe
+    // ═══════════════════════════════════════════════════════════════════════════
+    if (selectedUniverse === 'royaumes_legendaires') {
+        return <RoyaumesLegendairesView onBack={() => setSelectedUniverse(null)} />;
+    }
 
     // ═══════════════════════════════════════════════════════════════════════════
     // HUB VIEW - After team creation, show universes
@@ -166,6 +186,7 @@ export default function Nexus() {
                                 <motion.div
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
+                                    onClick={() => setSelectedUniverse(universe.id)}
                                     className={`p-4 rounded-xl bg-gradient-to-r ${universe.color} cursor-pointer relative overflow-hidden`}
                                     style={{ boxShadow: '0 0 20px rgba(0,0,0,0.3)' }}
                                 >
@@ -179,7 +200,7 @@ export default function Nexus() {
 
                                     {/* Status indicator */}
                                     <div className="absolute top-2 right-2 px-2 py-1 rounded text-xs bg-black/30 text-white/60">
-                                        🔒 Scan QR
+                                        {universe.id === 'royaumes_legendaires' ? '🔓 Ouvert' : '🔒 Scan QR'}
                                     </div>
                                 </motion.div>
                             </motion.div>
@@ -290,8 +311,8 @@ export default function Nexus() {
                                 onClick={handleCreateTeam}
                                 disabled={!teamName.trim() || isJoining}
                                 className={`w-full py-4 rounded-lg font-bold text-lg transition-all ${teamName.trim() && !isJoining
-                                        ? 'bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-white hover:from-cyan-400 hover:to-fuchsia-400'
-                                        : 'bg-gray-800 text-gray-500 cursor-not-allowed'
+                                    ? 'bg-gradient-to-r from-cyan-500 to-fuchsia-500 text-white hover:from-cyan-400 hover:to-fuchsia-400'
+                                    : 'bg-gray-800 text-gray-500 cursor-not-allowed'
                                     }`}
                                 style={{ fontFamily: 'Orbitron' }}
                             >

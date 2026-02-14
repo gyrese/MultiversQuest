@@ -182,10 +182,26 @@ app.post('/api/teams', (req, res) => {
         return res.status(400).json({ error: 'Nom d\'équipe requis (min 2 caractères)' });
     }
 
-    // Vérifier unicité du nom
-    const existingNames = Object.values(gameState.teams).map(t => t.name.toLowerCase());
-    if (existingNames.includes(name.toLowerCase())) {
-        return res.status(400).json({ error: 'Ce nom d\'équipe existe déjà' });
+    // Vérifier si l'équipe existe déjà (Reconnexion / Multi-device)
+    const existingTeam = Object.values(gameState.teams).find(t => t.name.toLowerCase() === name.trim().toLowerCase());
+
+    if (existingTeam) {
+        // En mode "soirée", on autorise la connexion simple par nom d'équipe
+        // Cela permet à plusieurs téléphones de jouer pour la même équipe
+        console.log(`🔄 Reconnexion à l'équipe existante: ${existingTeam.name} (${existingTeam.id})`);
+
+        // Mettre à jour l'avatar si fournis (optionnel)
+        if (avatar && avatar !== 'default') {
+            existingTeam.avatar = avatar;
+        }
+
+        return res.json({
+            success: true,
+            teamId: existingTeam.id,
+            token: existingTeam.token, // On renvoie le token pour permettre la connexion
+            team: getPublicTeam(existingTeam.id),
+            message: 'Reconnexion réussie'
+        });
     }
 
     // Limite d'équipes
@@ -643,10 +659,17 @@ io.on('connection', (socket) => {
             team.socketId = socket.id;
             socket.teamId = teamId;
             socket.join('teams');
+            socket.join(`team:${teamId}`); // Room dédiée à l'équipe
             console.log(`👥 Équipe "${team.name}" connectée`);
 
             socket.emit('team:state', getPublicTeam(teamId));
             socket.emit('game:state', getGameStateForTeam(teamId));
+
+            // Envoyer l'état complet du joueur si disponible (Synchro multi-device)
+            if (team.playerState) {
+                console.log(`📥 Envoi de la sauvegarde joueur à ${team.name}`);
+                socket.emit('player:loadState', team.playerState);
+            }
         } else if (type === 'DASHBOARD') {
             socket.join('dashboards');
             socket.emit('game:fullState', getGameStateBroadcast());
@@ -691,9 +714,24 @@ io.on('connection', (socket) => {
                 ranking: calculateRanking()
             });
 
-            io.emit('teams:update', getPublicTeams());
+            // io.emit('teams:update', getPublicTeams()); // Trop lourd ?
             socket.emit('activity:validated', { points: finalPoints, newScore: team.score });
             saveGameState();
+        }
+    });
+
+    // Synchronisation de l'état complet du joueur (Inventaire, Univers débloqués)
+    socket.on('player:sync', ({ teamId, state }) => {
+        const team = gameState.teams[teamId];
+        if (team) {
+            console.log(`💾 Sauvegarde joueur reçue pour ${team.name}`);
+            team.playerState = state;
+            saveGameState();
+
+            // Sync autres appareils
+            socket.to(`team:${teamId}`).emit('player:loadState', state);
+
+            socket.emit('player:synced', { success: true, timestamp: Date.now() });
         }
     });
 
@@ -812,6 +850,7 @@ function getPublicTeam(teamId) {
         avatar: team.avatar,
         score: team.score,
         completedUniverses: team.completedUniverses,
+        completedActivities: team.completedActivities, // Expose activity details for WarRoom
         connected: team.connected
     };
 }

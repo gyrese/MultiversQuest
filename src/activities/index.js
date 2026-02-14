@@ -14,6 +14,8 @@ export { default as SceauRunique } from './SceauRunique';
 export { default as TenetInversion } from './TenetInversion';
 // Star Wars
 export { default as KesselRun } from './KesselRun';
+// Seul sur Mars
+export { default as RoverRadar } from './RoverRadar';
 
 // Map des activités par ID pour le chargement dynamique
 export const ACTIVITY_COMPONENTS = {
@@ -22,4 +24,5 @@ export const ACTIVITY_COMPONENTS = {
     'sceau_runique': () => import('./SceauRunique'),
     'tenet_inversion': () => import('./TenetInversion'),
     'kessel_run': () => import('./KesselRun'),
+    'seul_sur_mars': () => import('./RoverRadar'),
 };

@@ -3,7 +3,7 @@
  * Ce contexte gère l'état local du joueur: équipe, univers, activités complétées
  */
 
-import { createContext, useContext, useReducer, useMemo } from 'react';
+import { createContext, useContext, useReducer, useMemo, useEffect } from 'react';
 import { UNIVERSES, UNIVERSE_ORDER } from '../data/universes';
 
 const PlayerContext = createContext(null);
@@ -15,6 +15,8 @@ function createInitialState() {
     // Initialisation de chaque univers
     UNIVERSE_ORDER.forEach((universeId, index) => {
         const universe = UNIVERSES[universeId];
+        if (!universe) return;
+
         const activities = {};
 
         // Initialiser chaque activité
@@ -92,17 +94,27 @@ function playerReducer(state, action) {
         }
 
         case 'COMPLETE_ACTIVITY': {
-            const { universeId, activityId, score } = action.payload;
+            let { universeId, activityId, score } = action.payload;
+            // Fix NaN input
+            if (typeof score !== 'number' || isNaN(score)) score = 0;
+
             const universe = state.universes[universeId];
             const activity = universe.activities[activityId];
 
-            const newBestScore = Math.max(activity.bestScore, score);
+            // Fix existing NaN corruption in state
+            const currentBest = (typeof activity.bestScore === 'number' && !isNaN(activity.bestScore)) ? activity.bestScore : 0;
+            const currentPoints = (typeof state.points === 'number' && !isNaN(state.points)) ? state.points : 0;
+
+            const newBestScore = Math.max(currentBest, score);
             const wasCompleted = activity.status === 'completed';
 
             // Calculer les nouveaux points (seulement ajouter la différence)
             const pointsToAdd = wasCompleted
-                ? Math.max(0, score - activity.bestScore)
+                ? Math.max(0, score - currentBest)
                 : score;
+
+            // Safety check for result
+            const safePointsToAdd = (typeof pointsToAdd === 'number' && !isNaN(pointsToAdd)) ? pointsToAdd : 0;
 
             // Vérifier si l'univers est maintenant complété
             const activitiesObj = universe.activities;
@@ -157,7 +169,7 @@ function playerReducer(state, action) {
 
             return {
                 ...state,
-                points: state.points + pointsToAdd,
+                points: (currentPoints || 0) + (safePointsToAdd || 0),
                 fragments: isUniverseCompleted && !wasCompleted ? state.fragments + 1 : state.fragments,
                 universes: newUniverses,
             };
@@ -177,14 +189,88 @@ function playerReducer(state, action) {
             };
         }
 
+        case 'SYNC_SCORE': {
+            return {
+                ...state,
+                points: action.payload
+            };
+        }
+
+        case 'IMPORT_FULL_STATE': {
+            return {
+                ...state,
+                ...action.payload,
+                isInitialized: true
+            };
+        }
+
         default:
             return state;
     }
 }
 
+const STORAGE_KEY = 'multivers_player_state_v2';
+
 // Provider component
 export function PlayerProvider({ children }) {
-    const [state, dispatch] = useReducer(playerReducer, null, createInitialState);
+    const [state, dispatch] = useReducer(playerReducer, null, () => {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        const initialState = createInitialState();
+
+        if (saved) {
+            try {
+                const savedState = JSON.parse(saved);
+
+                // 🔄 MIGRATION / MERGE STATE
+                // On fusionne l'état sauvegardé avec l'état initial pour inclure les nouveautés (ex: nouveaux quiz)
+                const mergedUniverses = { ...initialState.universes };
+
+                if (savedState.universes) {
+                    Object.keys(mergedUniverses).forEach(universeId => {
+                        const savedUniverse = savedState.universes[universeId];
+                        const initialUniverse = mergedUniverses[universeId];
+
+                        if (savedUniverse && initialUniverse) {
+                            // Fusion des activités
+                            const mergedActivities = { ...initialUniverse.activities };
+
+                            if (savedUniverse.activities) {
+                                Object.keys(mergedActivities).forEach(activityId => {
+                                    if (savedUniverse.activities[activityId]) {
+                                        // On garde la progression sauvegardée
+                                        mergedActivities[activityId] = savedUniverse.activities[activityId];
+                                    }
+                                    // Sinon on garde l'activité initiale (locked/available par défaut)
+                                });
+                            }
+
+                            mergedUniverses[universeId] = {
+                                ...initialUniverse, // Structure de base
+                                ...savedUniverse,   // Progression (status, completedActivities)
+                                activities: mergedActivities
+                            };
+                        }
+                        // Si l'univers n'existe pas dans la save (nouveau), on garde l'initial
+                    });
+                }
+
+                return {
+                    ...initialState,
+                    ...savedState,
+                    universes: mergedUniverses
+                };
+
+            } catch (e) {
+                console.error("Save corrompue, réinitialisation", e);
+            }
+        }
+        return initialState;
+    });
+
+    // Auto-save
+    useEffect(() => {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }, [state]);
 
     // Actions
     const actions = useMemo(() => ({
@@ -216,18 +302,42 @@ export function PlayerProvider({ children }) {
             dispatch({ type: 'ADD_TO_INVENTORY', payload: item });
         },
 
+        syncScore: (serverScore) => {
+            dispatch({ type: 'SYNC_SCORE', payload: serverScore });
+        },
+
+        importSave: (jsonString) => {
+            try {
+                const data = JSON.parse(jsonString);
+                // Validation minimale
+                if (data && data.teamName) {
+                    dispatch({ type: 'IMPORT_FULL_STATE', payload: data });
+                    return { success: true };
+                }
+                return { success: false, error: 'Données invalides' };
+            } catch (e) {
+                return { success: false, error: 'Format invalide' };
+            }
+        },
+
         // Helpers
         getUniverseProgress: (universeId) => {
             const universe = state.universes[universeId];
-            const totalActivities = Object.keys(UNIVERSES[universeId].activities).length;
+            if (!universe) return { completed: 0, total: 0, percentage: 0 }; // Fail safety
+
+            const config = UNIVERSES[universeId];
+            if (!config) return { completed: 0, total: 0, percentage: 0 };
+
+            const totalActivities = Object.keys(config.activities).length;
             return {
                 completed: universe.completedActivities,
                 total: totalActivities,
-                percentage: Math.round((universe.completedActivities / totalActivities) * 100),
+                percentage: totalActivities > 0 ? Math.round((universe.completedActivities / totalActivities) * 100) : 0,
             };
         },
 
         getCompletedCount: () => {
+            if (!state.universes) return 0;
             return Object.values(state.universes).filter(u => u.status === 'completed').length;
         },
 

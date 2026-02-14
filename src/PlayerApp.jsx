@@ -13,22 +13,93 @@ import Hub from './components/Hub';
 import './index.css';
 import DebugPanel from './components/debug/DebugPanel';
 import TeamAvatar from './components/TeamAvatar';
+import SaveTransferModal from './components/SaveTransferModal';
 
 // Lazy load activities pour optimiser le bundle initial
+// CORE
 const Rencontre3eType = lazy(() => import('./activities/Rencontre3eType.jsx'));
 const JurassicHack = lazy(() => import('./activities/JurassicHack.jsx'));
 const SceauRunique = lazy(() => import('./activities/SceauRunique.jsx'));
 const TenetInversion = lazy(() => import('./activities/TenetInversion.jsx'));
 const KesselRun = lazy(() => import('./activities/KesselRun.jsx'));
+const FalloutTerminal = lazy(() => import('./activities/FalloutTerminal.jsx'));
+const RoverRadar = lazy(() => import('./activities/RoverRadar.jsx'));
+const BugHunt = lazy(() => import('./activities/bugHunt/Game.jsx'));
+const GenericQuiz = lazy(() => import('./activities/GenericQuiz.jsx'));
+const ComingSoon = lazy(() => import('./activities/ComingSoon.jsx'));
+
+// BATCH 1 (Simple React)
+const MatrixChoix = lazy(() => import('./activities/MatrixChoix.jsx'));
+const GotTrone = lazy(() => import('./activities/GotTrone.jsx'));
+const TimelineParadox = lazy(() => import('./activities/TimelineParadox.jsx'));
+const LionKingLyrics = lazy(() => import('./activities/LionKingLyrics.jsx'));
+
+// BATCH 2 (Arcade React)
+const Kamehameha = lazy(() => import('./activities/Kamehameha.jsx'));
+const NickyLarson = lazy(() => import('./activities/NickyLarson.jsx'));
+const SailorMoon = lazy(() => import('./activities/SailorMoon.jsx'));
+
+// BATCH 3 (Casual React)
+const ToyStoryAndy = lazy(() => import('./activities/ToyStoryAndy.jsx'));
+const ShrekSwamp = lazy(() => import('./activities/ShrekSwamp.jsx'));
+const ChihiroBath = lazy(() => import('./activities/ChihiroBath.jsx'));
+
+// BATCH 4 (Odyssée Spatiale Complete)
+const AlienSurvie = lazy(() => import('./activities/AlienSurvie.jsx'));
+const InterstellarMorse = lazy(() => import('./activities/InterstellarMorse.jsx'));
+
+// BATCH 5 (Heroic Fantasy Complete)
+const CoursPotions = lazy(() => import('./activities/CoursPotions.jsx'));
+const OracleSmaug = lazy(() => import('./activities/OracleSmaug.jsx'));
+
 
 // Map des composants d'activité
 // Les clés doivent correspondre aux IDs utilisés dans les données de l'univers
 const ACTIVITY_MAP = {
+  // Existing
   'rencontre_3e_type': Rencontre3eType,
   'jurassic_hack': JurassicHack,
   'sceau_runique': SceauRunique,
   'tenet_inversion': TenetInversion,
   'kessel_run': KesselRun,
+  'fallout_hack': FalloutTerminal,
+  'seul_sur_mars': RoverRadar,
+  'bug_hunt': BugHunt,
+
+  // Batch 1 Additions
+  'matrix_choix': MatrixChoix,
+  'got_trone': GotTrone,
+  'bttf_timeline': TimelineParadox,
+  'lion_king_song': LionKingLyrics,
+
+  // Batch 2 Additions
+  'dbz_kamehameha': Kamehameha,
+  'nicky_larson_tir': NickyLarson,
+  'sailor_moon_transfo': SailorMoon,
+
+  // Batch 3 Additions
+  'toy_story_andy': ToyStoryAndy,
+  'shrek_swamp': ShrekSwamp,
+  'chihiro_bath': ChihiroBath,
+
+  // Batch 4 Additions
+  'alien_survie': AlienSurvie,
+  'interstellar_morse': InterstellarMorse,
+
+  // Batch 5 Additions
+  'hp_potions': CoursPotions,
+  'hobbit_riddler': OracleSmaug,
+
+  // Quizzes
+  'quiz_spatiale': GenericQuiz,
+  'quiz_fantasy': GenericQuiz,
+  'quiz_horreur': GenericQuiz,
+  'quiz_robots': GenericQuiz,
+  'quiz_dino': GenericQuiz,
+  'quiz_dimensions': GenericQuiz,
+  'quiz_dorothee': GenericQuiz,
+  'quiz_animation': GenericQuiz,
+  'quiz_apo': GenericQuiz,
 };
 
 // ============================================
@@ -57,6 +128,7 @@ function TeamLogin({ onJoinSuccess }) {
 
   const [isJoining, setIsJoining] = useState(false);
   const [error, setError] = useState(null);
+  const [showImportModal, setShowImportModal] = useState(false);
 
   // Check for existing team in localStorage
   useEffect(() => {
@@ -275,7 +347,37 @@ function TeamLogin({ onJoinSuccess }) {
                   'Entrer dans le Multivers'
                 )}
               </motion.button>
+
+              {/* BOUTON IMPORT PROFIL (Style Jeu Vidéo) */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowImportModal(true)}
+                className="w-full mt-4 py-3 rounded-lg border-2 border-cyan-500/30 bg-cyan-900/10 text-cyan-400 font-bold hover:bg-cyan-900/30 hover:border-cyan-400 transition-all flex items-center justify-center gap-2"
+                style={{ fontFamily: 'Orbitron' }}
+              >
+                <span className="text-xl">⬇️</span> CHARGER UN PROFIL
+              </motion.button>
+
             </div>
+
+            {/* MODAL IMPORT */}
+            <SaveTransferModal
+              isOpen={showImportModal}
+              onClose={() => setShowImportModal(false)}
+              mode="import"
+              onImportSuccess={(data) => {
+                console.log("Profil importé:", data);
+                setShowImportModal(false);
+                // Login automatique avec les données importées
+                onJoinSuccess({
+                  teamId: 'imported_' + Date.now(), // Temporaire
+                  token: 'imported',
+                  name: data.teamName,
+                  avatarStyle: data.avatarStyle
+                });
+              }}
+            />
 
             {/* Teams Count */}
             <div className="mt-4 text-center text-gray-500 text-xs font-mono">
@@ -302,13 +404,55 @@ function TeamLogin({ onJoinSuccess }) {
 // 🎮 MAIN APP CONTENT
 // ============================================
 function AppContent() {
-  const { identify, connected, gameState, submitScore } = useGame();
+  const { identify, connected, gameState, submitScore, currentTeam, socket } = useGame();
   const { state: playerState, actions: playerActions } = usePlayerGame();
 
   const [currentView, setCurrentView] = useState('login'); // login, hub, activity
   const [team, setTeam] = useState(null);
   const [selectedUniverse, setSelectedUniverse] = useState(null);
   const [activeActivity, setActiveActivity] = useState(null);
+
+  // Synchronisation Score Client <-> Serveur (Legacy, pour compatibilité)
+  useEffect(() => {
+    if (currentTeam && gameState.teams[currentTeam]) {
+      const serverScore = gameState.teams[currentTeam].score;
+      if (typeof serverScore === 'number' && serverScore !== playerState.points) {
+        playerActions.syncScore(serverScore);
+      }
+    }
+  }, [currentTeam, gameState.teams, playerState.points, playerActions]);
+
+  // ☁️ SYNC CLOUD (Serveur -> Client)
+  useEffect(() => {
+    if (!socket) return;
+
+    const onLoadState = (cloudState) => {
+      console.log("☁️ Réception sauvegarde Cloud");
+      // On convertit en string car importSave attend du JSON stringified (pour QR à la base)
+      if (cloudState) {
+        playerActions.importSave(JSON.stringify(cloudState));
+      }
+    };
+
+    socket.on('player:loadState', onLoadState);
+    return () => socket.off('player:loadState', onLoadState);
+  }, [socket, playerActions]);
+
+  // ☁️ AUTO-SAVE (Client -> Serveur)
+  useEffect(() => {
+    if (socket && connected && currentTeam && playerState.isInitialized) {
+      // Debounce pour ne pas spammer le serveur
+      const timer = setTimeout(() => {
+        // On n'envoie que si ça a changé ? Difficile à dire.
+        // On envoie tout le temps au bout de 2s d'inactivité
+        // console.log("☁️ Auto-save vers Cloud...");
+        socket.emit('player:sync', { teamId: currentTeam, state: playerState });
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [playerState, currentTeam, connected, socket]);
+
+  // Identify as player when connected
 
   // Identify as player when connected
   useEffect(() => {
@@ -374,7 +518,9 @@ function AppContent() {
   };
 
   // Get activity component
-  const ActivityComponent = activeActivity ? ACTIVITY_MAP[activeActivity] : null;
+  // Use map or fallback to ComingSoon
+  const ResolvedActivity = activeActivity ? ACTIVITY_MAP[activeActivity] || ComingSoon : null;
+  const ActivityComponent = ResolvedActivity;
 
   return (
     <>

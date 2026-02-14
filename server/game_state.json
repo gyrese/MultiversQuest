@@ -1,315 +1,2959 @@
 {
   "teams": {
-    "team_mlgidw64ld5b3b": {
-      "id": "team_mlgidw64ld5b3b",
-      "token": "tkn_aaaq00735b",
-      "name": "jttyjyj",
-      "avatar": "bottts",
+    "team_mlm9bix9yl67qk": {
+      "id": "team_mlm9bix9yl67qk",
+      "token": "tkn_dnsxtbst5ed",
+      "name": "les baleines rouges",
+      "avatar": "pollinations",
       "members": [],
-      "score": null,
+      "score": 2400,
       "completedUniverses": [],
-      "completedActivities": [],
+      "completedActivities": [
+        {
+          "key": "odyssee_spatiale:kessel_run",
+          "universeId": "odyssee_spatiale",
+          "activityId": "kessel_run",
+          "time": 1771072538739,
+          "points": 2400
+        }
+      ],
       "connected": true,
-      "createdAt": 1770722379292,
-      "lastActivity": 1770722431933,
-      "socketId": "8MBL0wvAQMagEWTyAAAJ"
+      "createdAt": 1771069949325,
+      "lastActivity": 1771072538739,
+      "socketId": "YJhE9sPwhP1o873sAAA_",
+      "playerState": {
+        "isInitialized": true,
+        "teamName": "les baleines rouges",
+        "avatarStyle": "pollinations",
+        "points": 2400,
+        "fragments": 0,
+        "currentActivity": null,
+        "universes": {
+          "odyssee_spatiale": {
+            "status": "available",
+            "completedActivities": 4,
+            "activities": {
+              "rencontre_3e_type": {
+                "status": "completed",
+                "bestScore": 400,
+                "attempts": 4
+              },
+              "seul_sur_mars": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "bug_hunt": {
+                "status": "completed",
+                "bestScore": 500,
+                "attempts": 2
+              },
+              "kessel_run": {
+                "status": "completed",
+                "bestScore": 2400,
+                "attempts": 4
+              },
+              "alien_survie": {
+                "status": "completed",
+                "bestScore": 400,
+                "attempts": 1
+              },
+              "interstellar_morse": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          },
+          "royaumes_legendaires": {
+            "status": "available",
+            "completedActivities": 2,
+            "activities": {
+              "sceau_runique": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "got_trone": {
+                "status": "completed",
+                "bestScore": 0,
+                "attempts": 6
+              },
+              "hp_potions": {
+                "status": "completed",
+                "bestScore": 400,
+                "attempts": 1
+              },
+              "hobbit_riddler": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          },
+          "tenebres_eternelles": {
+            "status": "available",
+            "completedActivities": 0,
+            "activities": {
+              "ring_vhs": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "saw_escape": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "it_peurs": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "shining_labyrinth": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          },
+          "mecanique_futur": {
+            "status": "locked",
+            "completedActivities": 0,
+            "activities": {
+              "matrix_choix": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "terminator_code": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "irobot_lois": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "bladerunner_test": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          },
+          "eres_perdues": {
+            "status": "locked",
+            "completedActivities": 0,
+            "activities": {
+              "jurassic_hack": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "kong_survie": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "planete_singes": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "prehistoric_hunt": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          },
+          "realites_alterees": {
+            "status": "locked",
+            "completedActivities": 0,
+            "activities": {
+              "inception_reves": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "bttf_timeline": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "tenet_inversion": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "strange_dimensions": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          },
+          "club_dorothee": {
+            "status": "available",
+            "completedActivities": 0,
+            "activities": {
+              "dbz_kamehameha": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "nicky_larson_tir": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "sailor_moon_transfo": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "olive_tom_tir": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          },
+          "animation_world": {
+            "status": "locked",
+            "completedActivities": 0,
+            "activities": {
+              "lion_king_song": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "toy_story_andy": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "shrek_swamp": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "chihiro_bath": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          },
+          "post_apo": {
+            "status": "available",
+            "completedActivities": 0,
+            "activities": {
+              "fallout_hack": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "tlou_clickers": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "madmax_fury": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "walking_dead_defense": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          }
+        },
+        "inventory": []
+      }
     },
-    "team_mlgn2dr1abtfq2": {
-      "id": "team_mlgn2dr1abtfq2",
-      "token": "tkn_472q9z27dlw",
-      "name": "dcsdccsdcs",
+    "team_mlmc37wtcv9oj9": {
+      "id": "team_mlmc37wtcv9oj9",
+      "token": "tkn_q0kd3vazac",
+      "name": "Team gros",
       "avatar": "pollinations",
       "members": [],
       "score": 0,
       "completedUniverses": [],
       "completedActivities": [],
-      "connected": false,
-      "createdAt": 1770730240285,
-      "lastActivity": 1770730240285,
-      "socketId": "UL9WrM7x4uL-p50iAAAx"
-    },
-    "team_mlgnpyzluvg28d": {
-      "id": "team_mlgnpyzluvg28d",
-      "token": "tkn_3orol2mvb66",
-      "name": "les chats bleu",
-      "avatar": "pollinations",
-      "members": [],
-      "score": 0,
-      "completedUniverses": [],
-      "completedActivities": [],
       "connected": true,
-      "createdAt": 1770731340897,
-      "lastActivity": 1770731340897,
-      "socketId": "_f3uEOFTGufpcMDwAAAB"
-    },
-    "team_mlgqjbjx7avt2e": {
-      "id": "team_mlgqjbjx7avt2e",
-      "token": "tkn_6e7mt00o964",
-      "name": "les fous du volant",
-      "avatar": "pollinations",
-      "members": [],
-      "score": 0,
-      "completedUniverses": [],
-      "completedActivities": [],
-      "connected": true,
-      "createdAt": 1770736069437,
-      "lastActivity": 1770736069437,
-      "socketId": "IwyutFCDrIpLRKK-AAAH"
-    },
-    "team_mlgrk3rwrcfm5a": {
-      "id": "team_mlgrk3rwrcfm5a",
-      "token": "tkn_2j1bvc4dyyj",
-      "name": "les dark vador",
-      "avatar": "pollinations",
-      "members": [],
-      "score": null,
-      "completedUniverses": [],
-      "completedActivities": [],
-      "connected": true,
-      "createdAt": 1770737785628,
-      "lastActivity": 1770737799955,
-      "socketId": "zG1IgXLTRYYPyZfwAAAD"
-    },
-    "team_mlhkoflxhzj4k0": {
-      "id": "team_mlhkoflxhzj4k0",
-      "token": "tkn_yqew909wiy",
-      "name": "Les ninjas bleu",
-      "avatar": "pollinations",
-      "members": [],
-      "score": 0,
-      "completedUniverses": [],
-      "completedActivities": [],
-      "connected": true,
-      "createdAt": 1770786696453,
-      "lastActivity": 1770786696453,
-      "socketId": "Fexa1rI-vs_BNbuDAAAR"
-    },
-    "team_mlhm9ufrae254g": {
-      "id": "team_mlhm9ufrae254g",
-      "token": "tkn_ehvd7ax49u",
-      "name": "Les voitures volantes",
-      "avatar": "pollinations",
-      "members": [],
-      "score": null,
-      "completedUniverses": [],
-      "completedActivities": [],
-      "connected": true,
-      "createdAt": 1770789375063,
-      "lastActivity": 1770796289695,
-      "socketId": "iBYf8nYMr8TCHmKDAAAm"
+      "createdAt": 1771074600653,
+      "lastActivity": 1771074600653,
+      "socketId": "CSBWKKjMt3qF-kqbAABB",
+      "playerState": {
+        "isInitialized": true,
+        "teamName": "Team gros",
+        "avatarStyle": "pollinations",
+        "points": 0,
+        "fragments": 0,
+        "currentActivity": {
+          "universeId": "odyssee_spatiale",
+          "activityId": "kessel_run"
+        },
+        "universes": {
+          "odyssee_spatiale": {
+            "status": "available",
+            "completedActivities": 2,
+            "activities": {
+              "rencontre_3e_type": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "seul_sur_mars": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "bug_hunt": {
+                "status": "completed",
+                "bestScore": 500,
+                "attempts": 2
+              },
+              "kessel_run": {
+                "status": "completed",
+                "bestScore": 2900,
+                "attempts": 2
+              },
+              "alien_survie": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "interstellar_morse": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "quiz_spatiale": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          },
+          "royaumes_legendaires": {
+            "status": "available",
+            "completedActivities": 1,
+            "activities": {
+              "sceau_runique": {
+                "status": "completed",
+                "bestScore": 950,
+                "attempts": 2
+              },
+              "got_trone": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "hp_potions": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "hobbit_riddler": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "quiz_fantasy": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          },
+          "tenebres_eternelles": {
+            "status": "available",
+            "completedActivities": 0,
+            "activities": {
+              "ring_vhs": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "saw_escape": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "it_peurs": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "shining_labyrinth": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "quiz_horreur": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          },
+          "mecanique_futur": {
+            "status": "available",
+            "completedActivities": 0,
+            "activities": {
+              "matrix_choix": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "terminator_code": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "irobot_lois": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "bladerunner_test": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "quiz_robots": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          },
+          "eres_perdues": {
+            "status": "locked",
+            "completedActivities": 0,
+            "activities": {
+              "jurassic_hack": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "kong_survie": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "planete_singes": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "prehistoric_hunt": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "quiz_dino": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          },
+          "realites_alterees": {
+            "status": "locked",
+            "completedActivities": 0,
+            "activities": {
+              "inception_reves": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "bttf_timeline": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "tenet_inversion": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "strange_dimensions": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "quiz_dimensions": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          },
+          "club_dorothee": {
+            "status": "locked",
+            "completedActivities": 0,
+            "activities": {
+              "dbz_kamehameha": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "nicky_larson_tir": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "sailor_moon_transfo": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "olive_tom_tir": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "quiz_dorothee": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          },
+          "animation_world": {
+            "status": "locked",
+            "completedActivities": 0,
+            "activities": {
+              "lion_king_song": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "toy_story_andy": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "shrek_swamp": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "chihiro_bath": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "quiz_animation": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          },
+          "post_apo": {
+            "status": "locked",
+            "completedActivities": 0,
+            "activities": {
+              "fallout_hack": {
+                "status": "available",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "tlou_clickers": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "madmax_fury": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "walking_dead_defense": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              },
+              "quiz_apo": {
+                "status": "locked",
+                "bestScore": 0,
+                "attempts": 0
+              }
+            }
+          }
+        },
+        "inventory": []
+      }
     }
   },
   "history": [
     {
-      "id": 1770796289695,
-      "time": 1770796289695,
-      "type": "SCORE",
-      "message": "Les voitures volantes: odyssee_spatiale/kessel_run (+NaNpts)",
-      "teamId": "team_mlhm9ufrae254g"
+      "id": 1771074600653,
+      "time": 1771074600653,
+      "type": "TEAM_CREATED",
+      "message": "Équipe \"Team gros\" inscrite au programme Multivers",
+      "teamId": null
     },
     {
-      "id": 1770794655014,
-      "time": 1770794655014,
-      "type": "SCORE",
-      "message": "Les voitures volantes: odyssee_spatiale/kessel_run (+NaNpts)",
-      "teamId": "team_mlhm9ufrae254g"
-    },
-    {
-      "id": 1770792755007,
-      "time": 1770792755007,
+      "id": 1771073529633,
+      "time": 1771073529633,
       "type": "EVENT",
-      "message": "⚡ Panne de la Matrice: Le code source devient instable...",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     },
     {
-      "id": 1770792740518,
-      "time": 1770792740518,
+      "id": 1771073528624,
+      "time": 1771073528624,
       "type": "EVENT",
-      "message": "⚡ Bonus Cosmique: Points x2 temporaire pour tous!",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     },
     {
-      "id": 1770792736676,
-      "time": 1770792736676,
+      "id": 1771073527613,
+      "time": 1771073527613,
       "type": "EVENT",
-      "message": "⚡ Alerte Rouge: Intrusion détectée dans le système!",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     },
     {
-      "id": 1770792730542,
-      "time": 1770792730542,
+      "id": 1771073526600,
+      "time": 1771073526600,
       "type": "EVENT",
-      "message": "⚡ Glitch Universel: Une anomalie temporelle déforme la réalité!",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     },
     {
-      "id": 1770789375063,
-      "time": 1770789375063,
-      "type": "TEAM_CREATED",
-      "message": "Équipe \"Les voitures volantes\" inscrite au programme Multivers",
-      "teamId": null
-    },
-    {
-      "id": 1770786766342,
-      "time": 1770786766342,
+      "id": 1771073525590,
+      "time": 1771073525590,
       "type": "EVENT",
-      "message": "⚡ Alerte Rouge: Intrusion détectée dans le système!",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     },
     {
-      "id": 1770786745637,
-      "time": 1770786745637,
-      "type": "TEAM_REMOVED",
-      "message": "Équipe \"chat\" retirée du programme",
+      "id": 1771073524583,
+      "time": 1771073524583,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     },
     {
-      "id": 1770786742156,
-      "time": 1770786742156,
-      "type": "TEAM_REMOVED",
-      "message": "Équipe \"les chats\" retirée du programme",
+      "id": 1771073523575,
+      "time": 1771073523575,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     },
     {
-      "id": 1770786738395,
-      "time": 1770786738395,
-      "type": "TEAM_REMOVED",
-      "message": "Équipe \"les chiens volants\" retirée du programme",
+      "id": 1771073522575,
+      "time": 1771073522575,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     },
     {
-      "id": 1770786696453,
-      "time": 1770786696453,
-      "type": "TEAM_CREATED",
-      "message": "Équipe \"Les ninjas bleu\" inscrite au programme Multivers",
+      "id": 1771073521566,
+      "time": 1771073521566,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     },
     {
-      "id": 1770741565764,
-      "time": 1770741565764,
-      "type": "TEAM_CREATED",
-      "message": "Équipe \"les chiens volants\" inscrite au programme Multivers",
+      "id": 1771073520553,
+      "time": 1771073520553,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     },
     {
-      "id": 1770737799955,
-      "time": 1770737799955,
-      "type": "SCORE",
-      "message": "les dark vador: odyssee_spatiale/rencontre_3e_type (+NaNpts)",
-      "teamId": "team_mlgrk3rwrcfm5a"
-    },
-    {
-      "id": 1770737785628,
-      "time": 1770737785628,
-      "type": "TEAM_CREATED",
-      "message": "Équipe \"les dark vador\" inscrite au programme Multivers",
+      "id": 1771073519545,
+      "time": 1771073519545,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     },
     {
-      "id": 1770736069437,
-      "time": 1770736069437,
-      "type": "TEAM_CREATED",
-      "message": "Équipe \"les fous du volant\" inscrite au programme Multivers",
+      "id": 1771073518536,
+      "time": 1771073518536,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     },
     {
-      "id": 1770731340897,
-      "time": 1770731340897,
-      "type": "TEAM_CREATED",
-      "message": "Équipe \"les chats bleu\" inscrite au programme Multivers",
+      "id": 1771073517526,
+      "time": 1771073517526,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     },
     {
-      "id": 1770731315012,
-      "time": 1770731315012,
-      "type": "TEAM_CREATED",
-      "message": "Équipe \"chat\" inscrite au programme Multivers",
+      "id": 1771073516514,
+      "time": 1771073516514,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     },
     {
-      "id": 1770730240285,
-      "time": 1770730240285,
-      "type": "TEAM_CREATED",
-      "message": "Équipe \"dcsdccsdcs\" inscrite au programme Multivers",
+      "id": 1771073515505,
+      "time": 1771073515505,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     },
     {
-      "id": 1770723400931,
-      "time": 1770723400931,
-      "type": "TEAM_CREATED",
-      "message": "Équipe \"les chats\" inscrite au programme Multivers",
+      "id": 1771073514494,
+      "time": 1771073514494,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     },
     {
-      "id": 1770722431933,
-      "time": 1770722431933,
-      "type": "SCORE",
-      "message": "jttyjyj: royaumes_legendaires/sceau_runique (+NaNpts)",
-      "teamId": "team_mlgidw64ld5b3b"
+      "id": 1771073513487,
+      "time": 1771073513487,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
     },
     {
-      "id": 1770722379292,
-      "time": 1770722379292,
-      "type": "TEAM_CREATED",
-      "message": "Équipe \"jttyjyj\" inscrite au programme Multivers",
+      "id": 1771073512481,
+      "time": 1771073512481,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073511468,
+      "time": 1771073511468,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073510459,
+      "time": 1771073510459,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073509453,
+      "time": 1771073509453,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073508443,
+      "time": 1771073508443,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073507435,
+      "time": 1771073507435,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073506422,
+      "time": 1771073506422,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073505413,
+      "time": 1771073505413,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073504403,
+      "time": 1771073504403,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073503388,
+      "time": 1771073503388,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073502375,
+      "time": 1771073502375,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073501368,
+      "time": 1771073501368,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073500362,
+      "time": 1771073500362,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073499351,
+      "time": 1771073499351,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073498342,
+      "time": 1771073498342,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073497331,
+      "time": 1771073497331,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073496324,
+      "time": 1771073496324,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073495319,
+      "time": 1771073495319,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073494311,
+      "time": 1771073494311,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073493300,
+      "time": 1771073493300,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073492287,
+      "time": 1771073492287,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073491274,
+      "time": 1771073491274,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073490262,
+      "time": 1771073490262,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073489252,
+      "time": 1771073489252,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073488239,
+      "time": 1771073488239,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073487233,
+      "time": 1771073487233,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073486221,
+      "time": 1771073486221,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073485212,
+      "time": 1771073485212,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073484203,
+      "time": 1771073484203,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073483193,
+      "time": 1771073483193,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073482185,
+      "time": 1771073482185,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073481177,
+      "time": 1771073481177,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073480171,
+      "time": 1771073480171,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073479164,
+      "time": 1771073479164,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073478154,
+      "time": 1771073478154,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073477147,
+      "time": 1771073477147,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073476137,
+      "time": 1771073476137,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073475129,
+      "time": 1771073475129,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073474122,
+      "time": 1771073474122,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073473110,
+      "time": 1771073473110,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073472102,
+      "time": 1771073472103,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073471091,
+      "time": 1771073471091,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073470083,
+      "time": 1771073470083,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073469074,
+      "time": 1771073469074,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073468066,
+      "time": 1771073468066,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073467059,
+      "time": 1771073467059,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073466047,
+      "time": 1771073466047,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073465038,
+      "time": 1771073465038,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073464030,
+      "time": 1771073464030,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073463022,
+      "time": 1771073463022,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073462007,
+      "time": 1771073462007,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073460998,
+      "time": 1771073460998,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073459990,
+      "time": 1771073459990,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073458985,
+      "time": 1771073458985,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073457977,
+      "time": 1771073457977,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073456967,
+      "time": 1771073456967,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073455958,
+      "time": 1771073455958,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073454947,
+      "time": 1771073454947,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073453938,
+      "time": 1771073453938,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073452938,
+      "time": 1771073452938,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073451929,
+      "time": 1771073451929,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073450922,
+      "time": 1771073450922,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073449910,
+      "time": 1771073449910,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073448898,
+      "time": 1771073448898,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073447890,
+      "time": 1771073447890,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073446883,
+      "time": 1771073446883,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073445884,
+      "time": 1771073445884,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073444873,
+      "time": 1771073444873,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073443861,
+      "time": 1771073443861,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073442858,
+      "time": 1771073442858,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073441844,
+      "time": 1771073441844,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073440836,
+      "time": 1771073440836,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073439829,
+      "time": 1771073439829,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073438825,
+      "time": 1771073438825,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073437813,
+      "time": 1771073437813,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073436805,
+      "time": 1771073436805,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073435794,
+      "time": 1771073435794,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073434785,
+      "time": 1771073434785,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073433776,
+      "time": 1771073433776,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073432765,
+      "time": 1771073432765,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073431755,
+      "time": 1771073431755,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
+      "teamId": null
+    },
+    {
+      "id": 1771073430748,
+      "time": 1771073430748,
+      "type": "EVENT",
+      "message": "⚡ BOSS_FINAL: Le Boss Final approche!",
       "teamId": null
     }
   ],
-  "status": "PLAYING",
-  "phase": "INITIALISATION",
-  "startTime": 1770722366169,
-  "globalTimer": 3535,
+  "status": "ENDED",
+  "phase": "EPILOGUE",
+  "startTime": 1771069900554,
+  "globalTimer": 0,
   "scenarioEvents": [
     {
-      "id": 1770786766341,
-      "name": "Alerte Rouge",
-      "description": "Intrusion détectée dans le système!",
-      "effect": "ALERT",
-      "startTime": 1770786766342,
-      "duration": 20000,
-      "endTime": 1770786786342
-    },
-    {
-      "id": 1770792730542,
+      "id": 1771070808461,
       "name": "Glitch Universel",
       "description": "Une anomalie temporelle déforme la réalité!",
       "effect": "GLITCH",
-      "startTime": 1770792730542,
+      "startTime": 1771070808461,
       "duration": 30000,
-      "endTime": 1770792760542
+      "endTime": 1771070838461
     },
     {
-      "id": 1770792736676,
-      "name": "Alerte Rouge",
-      "description": "Intrusion détectée dans le système!",
-      "effect": "ALERT",
-      "startTime": 1770792736676,
-      "duration": 20000,
-      "endTime": 1770792756676
-    },
-    {
-      "id": 1770792740518,
+      "id": 1771072621648,
       "name": "Bonus Cosmique",
       "description": "Points x2 temporaire pour tous!",
       "effect": "BONUS",
-      "startTime": 1770792740518,
+      "startTime": 1771072621648,
       "duration": 60000,
-      "endTime": 1770792800518
+      "endTime": 1771072681648
     },
     {
-      "id": 1770792755007,
-      "name": "Panne de la Matrice",
-      "description": "Le code source devient instable...",
-      "effect": "MATRIX_GLITCH",
-      "startTime": 1770792755007,
-      "duration": 25000,
-      "endTime": 1770792780007
+      "id": 1771073347970,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073347970,
+      "duration": 120000,
+      "endTime": 1771073467970
+    },
+    {
+      "id": 1771073348981,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073348981,
+      "duration": 120000,
+      "endTime": 1771073468981
+    },
+    {
+      "id": 1771073349983,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073349983,
+      "duration": 120000,
+      "endTime": 1771073469983
+    },
+    {
+      "id": 1771073350991,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073350991,
+      "duration": 120000,
+      "endTime": 1771073470991
+    },
+    {
+      "id": 1771073352000,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073352000,
+      "duration": 120000,
+      "endTime": 1771073472000
+    },
+    {
+      "id": 1771073353006,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073353006,
+      "duration": 120000,
+      "endTime": 1771073473006
+    },
+    {
+      "id": 1771073354020,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073354020,
+      "duration": 120000,
+      "endTime": 1771073474020
+    },
+    {
+      "id": 1771073355028,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073355028,
+      "duration": 120000,
+      "endTime": 1771073475028
+    },
+    {
+      "id": 1771073356041,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073356041,
+      "duration": 120000,
+      "endTime": 1771073476041
+    },
+    {
+      "id": 1771073357046,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073357046,
+      "duration": 120000,
+      "endTime": 1771073477046
+    },
+    {
+      "id": 1771073358061,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073358061,
+      "duration": 120000,
+      "endTime": 1771073478061
+    },
+    {
+      "id": 1771073359067,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073359067,
+      "duration": 120000,
+      "endTime": 1771073479067
+    },
+    {
+      "id": 1771073360078,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073360078,
+      "duration": 120000,
+      "endTime": 1771073480078
+    },
+    {
+      "id": 1771073361085,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073361085,
+      "duration": 120000,
+      "endTime": 1771073481085
+    },
+    {
+      "id": 1771073362097,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073362097,
+      "duration": 120000,
+      "endTime": 1771073482097
+    },
+    {
+      "id": 1771073363104,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073363104,
+      "duration": 120000,
+      "endTime": 1771073483104
+    },
+    {
+      "id": 1771073364115,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073364115,
+      "duration": 120000,
+      "endTime": 1771073484115
+    },
+    {
+      "id": 1771073365128,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073365128,
+      "duration": 120000,
+      "endTime": 1771073485128
+    },
+    {
+      "id": 1771073366141,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073366141,
+      "duration": 120000,
+      "endTime": 1771073486141
+    },
+    {
+      "id": 1771073367154,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073367154,
+      "duration": 120000,
+      "endTime": 1771073487154
+    },
+    {
+      "id": 1771073368162,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073368162,
+      "duration": 120000,
+      "endTime": 1771073488162
+    },
+    {
+      "id": 1771073369168,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073369168,
+      "duration": 120000,
+      "endTime": 1771073489168
+    },
+    {
+      "id": 1771073370178,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073370178,
+      "duration": 120000,
+      "endTime": 1771073490178
+    },
+    {
+      "id": 1771073371191,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073371191,
+      "duration": 120000,
+      "endTime": 1771073491191
+    },
+    {
+      "id": 1771073372200,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073372200,
+      "duration": 120000,
+      "endTime": 1771073492200
+    },
+    {
+      "id": 1771073373208,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073373208,
+      "duration": 120000,
+      "endTime": 1771073493208
+    },
+    {
+      "id": 1771073374220,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073374220,
+      "duration": 120000,
+      "endTime": 1771073494220
+    },
+    {
+      "id": 1771073375233,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073375233,
+      "duration": 120000,
+      "endTime": 1771073495233
+    },
+    {
+      "id": 1771073376236,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073376236,
+      "duration": 120000,
+      "endTime": 1771073496236
+    },
+    {
+      "id": 1771073377248,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073377248,
+      "duration": 120000,
+      "endTime": 1771073497248
+    },
+    {
+      "id": 1771073378251,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073378251,
+      "duration": 120000,
+      "endTime": 1771073498251
+    },
+    {
+      "id": 1771073379265,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073379265,
+      "duration": 120000,
+      "endTime": 1771073499265
+    },
+    {
+      "id": 1771073380273,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073380273,
+      "duration": 120000,
+      "endTime": 1771073500273
+    },
+    {
+      "id": 1771073381286,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073381286,
+      "duration": 120000,
+      "endTime": 1771073501286
+    },
+    {
+      "id": 1771073382301,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073382301,
+      "duration": 120000,
+      "endTime": 1771073502301
+    },
+    {
+      "id": 1771073383312,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073383312,
+      "duration": 120000,
+      "endTime": 1771073503312
+    },
+    {
+      "id": 1771073384321,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073384321,
+      "duration": 120000,
+      "endTime": 1771073504321
+    },
+    {
+      "id": 1771073385331,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073385331,
+      "duration": 120000,
+      "endTime": 1771073505331
+    },
+    {
+      "id": 1771073386336,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073386336,
+      "duration": 120000,
+      "endTime": 1771073506336
+    },
+    {
+      "id": 1771073387343,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073387343,
+      "duration": 120000,
+      "endTime": 1771073507343
+    },
+    {
+      "id": 1771073388355,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073388355,
+      "duration": 120000,
+      "endTime": 1771073508355
+    },
+    {
+      "id": 1771073389365,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073389365,
+      "duration": 120000,
+      "endTime": 1771073509365
+    },
+    {
+      "id": 1771073390373,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073390373,
+      "duration": 120000,
+      "endTime": 1771073510373
+    },
+    {
+      "id": 1771073391379,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073391379,
+      "duration": 120000,
+      "endTime": 1771073511379
+    },
+    {
+      "id": 1771073392392,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073392392,
+      "duration": 120000,
+      "endTime": 1771073512392
+    },
+    {
+      "id": 1771073393400,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073393400,
+      "duration": 120000,
+      "endTime": 1771073513400
+    },
+    {
+      "id": 1771073394414,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073394414,
+      "duration": 120000,
+      "endTime": 1771073514414
+    },
+    {
+      "id": 1771073395424,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073395424,
+      "duration": 120000,
+      "endTime": 1771073515424
+    },
+    {
+      "id": 1771073396434,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073396434,
+      "duration": 120000,
+      "endTime": 1771073516434
+    },
+    {
+      "id": 1771073397445,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073397445,
+      "duration": 120000,
+      "endTime": 1771073517445
+    },
+    {
+      "id": 1771073398446,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073398446,
+      "duration": 120000,
+      "endTime": 1771073518446
+    },
+    {
+      "id": 1771073399458,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073399458,
+      "duration": 120000,
+      "endTime": 1771073519458
+    },
+    {
+      "id": 1771073400468,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073400468,
+      "duration": 120000,
+      "endTime": 1771073520468
+    },
+    {
+      "id": 1771073401479,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073401479,
+      "duration": 120000,
+      "endTime": 1771073521479
+    },
+    {
+      "id": 1771073402491,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073402491,
+      "duration": 120000,
+      "endTime": 1771073522491
+    },
+    {
+      "id": 1771073403502,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073403502,
+      "duration": 120000,
+      "endTime": 1771073523502
+    },
+    {
+      "id": 1771073404508,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073404508,
+      "duration": 120000,
+      "endTime": 1771073524508
+    },
+    {
+      "id": 1771073405518,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073405518,
+      "duration": 120000,
+      "endTime": 1771073525518
+    },
+    {
+      "id": 1771073406533,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073406533,
+      "duration": 120000,
+      "endTime": 1771073526533
+    },
+    {
+      "id": 1771073407545,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073407545,
+      "duration": 120000,
+      "endTime": 1771073527545
+    },
+    {
+      "id": 1771073408553,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073408553,
+      "duration": 120000,
+      "endTime": 1771073528553
+    },
+    {
+      "id": 1771073409566,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073409566,
+      "duration": 120000,
+      "endTime": 1771073529566
+    },
+    {
+      "id": 1771073410578,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073410578,
+      "duration": 120000,
+      "endTime": 1771073530578
+    },
+    {
+      "id": 1771073411584,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073411584,
+      "duration": 120000,
+      "endTime": 1771073531584
+    },
+    {
+      "id": 1771073412591,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073412591,
+      "duration": 120000,
+      "endTime": 1771073532591
+    },
+    {
+      "id": 1771073413605,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073413605,
+      "duration": 120000,
+      "endTime": 1771073533605
+    },
+    {
+      "id": 1771073414605,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073414605,
+      "duration": 120000,
+      "endTime": 1771073534605
+    },
+    {
+      "id": 1771073415617,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073415617,
+      "duration": 120000,
+      "endTime": 1771073535617
+    },
+    {
+      "id": 1771073416617,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073416617,
+      "duration": 120000,
+      "endTime": 1771073536617
+    },
+    {
+      "id": 1771073417628,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073417628,
+      "duration": 120000,
+      "endTime": 1771073537628
+    },
+    {
+      "id": 1771073418640,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073418640,
+      "duration": 120000,
+      "endTime": 1771073538640
+    },
+    {
+      "id": 1771073419650,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073419650,
+      "duration": 120000,
+      "endTime": 1771073539650
+    },
+    {
+      "id": 1771073420659,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073420659,
+      "duration": 120000,
+      "endTime": 1771073540659
+    },
+    {
+      "id": 1771073421669,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073421669,
+      "duration": 120000,
+      "endTime": 1771073541669
+    },
+    {
+      "id": 1771073422678,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073422678,
+      "duration": 120000,
+      "endTime": 1771073542678
+    },
+    {
+      "id": 1771073423694,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073423694,
+      "duration": 120000,
+      "endTime": 1771073543694
+    },
+    {
+      "id": 1771073424707,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073424707,
+      "duration": 120000,
+      "endTime": 1771073544707
+    },
+    {
+      "id": 1771073425716,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073425716,
+      "duration": 120000,
+      "endTime": 1771073545716
+    },
+    {
+      "id": 1771073426720,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073426720,
+      "duration": 120000,
+      "endTime": 1771073546720
+    },
+    {
+      "id": 1771073427729,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073427729,
+      "duration": 120000,
+      "endTime": 1771073547729
+    },
+    {
+      "id": 1771073428742,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073428742,
+      "duration": 120000,
+      "endTime": 1771073548742
+    },
+    {
+      "id": 1771073429744,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073429744,
+      "duration": 120000,
+      "endTime": 1771073549744
+    },
+    {
+      "id": 1771073430748,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073430748,
+      "duration": 120000,
+      "endTime": 1771073550748
+    },
+    {
+      "id": 1771073431755,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073431755,
+      "duration": 120000,
+      "endTime": 1771073551755
+    },
+    {
+      "id": 1771073432765,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073432765,
+      "duration": 120000,
+      "endTime": 1771073552765
+    },
+    {
+      "id": 1771073433776,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073433776,
+      "duration": 120000,
+      "endTime": 1771073553776
+    },
+    {
+      "id": 1771073434785,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073434785,
+      "duration": 120000,
+      "endTime": 1771073554785
+    },
+    {
+      "id": 1771073435794,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073435794,
+      "duration": 120000,
+      "endTime": 1771073555794
+    },
+    {
+      "id": 1771073436805,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073436805,
+      "duration": 120000,
+      "endTime": 1771073556805
+    },
+    {
+      "id": 1771073437813,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073437813,
+      "duration": 120000,
+      "endTime": 1771073557813
+    },
+    {
+      "id": 1771073438825,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073438825,
+      "duration": 120000,
+      "endTime": 1771073558825
+    },
+    {
+      "id": 1771073439829,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073439829,
+      "duration": 120000,
+      "endTime": 1771073559829
+    },
+    {
+      "id": 1771073440836,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073440836,
+      "duration": 120000,
+      "endTime": 1771073560836
+    },
+    {
+      "id": 1771073441844,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073441844,
+      "duration": 120000,
+      "endTime": 1771073561844
+    },
+    {
+      "id": 1771073442858,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073442858,
+      "duration": 120000,
+      "endTime": 1771073562858
+    },
+    {
+      "id": 1771073443861,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073443861,
+      "duration": 120000,
+      "endTime": 1771073563861
+    },
+    {
+      "id": 1771073444873,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073444873,
+      "duration": 120000,
+      "endTime": 1771073564873
+    },
+    {
+      "id": 1771073445884,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073445884,
+      "duration": 120000,
+      "endTime": 1771073565884
+    },
+    {
+      "id": 1771073446883,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073446883,
+      "duration": 120000,
+      "endTime": 1771073566883
+    },
+    {
+      "id": 1771073447890,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073447890,
+      "duration": 120000,
+      "endTime": 1771073567890
+    },
+    {
+      "id": 1771073448898,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073448898,
+      "duration": 120000,
+      "endTime": 1771073568898
+    },
+    {
+      "id": 1771073449910,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073449910,
+      "duration": 120000,
+      "endTime": 1771073569910
+    },
+    {
+      "id": 1771073450922,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073450922,
+      "duration": 120000,
+      "endTime": 1771073570922
+    },
+    {
+      "id": 1771073451929,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073451929,
+      "duration": 120000,
+      "endTime": 1771073571929
+    },
+    {
+      "id": 1771073452938,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073452938,
+      "duration": 120000,
+      "endTime": 1771073572938
+    },
+    {
+      "id": 1771073453938,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073453938,
+      "duration": 120000,
+      "endTime": 1771073573938
+    },
+    {
+      "id": 1771073454947,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073454947,
+      "duration": 120000,
+      "endTime": 1771073574947
+    },
+    {
+      "id": 1771073455958,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073455958,
+      "duration": 120000,
+      "endTime": 1771073575958
+    },
+    {
+      "id": 1771073456967,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073456967,
+      "duration": 120000,
+      "endTime": 1771073576967
+    },
+    {
+      "id": 1771073457977,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073457977,
+      "duration": 120000,
+      "endTime": 1771073577977
+    },
+    {
+      "id": 1771073458985,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073458985,
+      "duration": 120000,
+      "endTime": 1771073578985
+    },
+    {
+      "id": 1771073459990,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073459990,
+      "duration": 120000,
+      "endTime": 1771073579990
+    },
+    {
+      "id": 1771073460998,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073460998,
+      "duration": 120000,
+      "endTime": 1771073580998
+    },
+    {
+      "id": 1771073462007,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073462007,
+      "duration": 120000,
+      "endTime": 1771073582007
+    },
+    {
+      "id": 1771073463022,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073463022,
+      "duration": 120000,
+      "endTime": 1771073583022
+    },
+    {
+      "id": 1771073464030,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073464030,
+      "duration": 120000,
+      "endTime": 1771073584030
+    },
+    {
+      "id": 1771073465038,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073465038,
+      "duration": 120000,
+      "endTime": 1771073585038
+    },
+    {
+      "id": 1771073466047,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073466047,
+      "duration": 120000,
+      "endTime": 1771073586047
+    },
+    {
+      "id": 1771073467059,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073467059,
+      "duration": 120000,
+      "endTime": 1771073587059
+    },
+    {
+      "id": 1771073468066,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073468066,
+      "duration": 120000,
+      "endTime": 1771073588066
+    },
+    {
+      "id": 1771073469074,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073469074,
+      "duration": 120000,
+      "endTime": 1771073589074
+    },
+    {
+      "id": 1771073470083,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073470083,
+      "duration": 120000,
+      "endTime": 1771073590083
+    },
+    {
+      "id": 1771073471091,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073471091,
+      "duration": 120000,
+      "endTime": 1771073591091
+    },
+    {
+      "id": 1771073472102,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073472102,
+      "duration": 120000,
+      "endTime": 1771073592102
+    },
+    {
+      "id": 1771073473110,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073473110,
+      "duration": 120000,
+      "endTime": 1771073593110
+    },
+    {
+      "id": 1771073474122,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073474122,
+      "duration": 120000,
+      "endTime": 1771073594122
+    },
+    {
+      "id": 1771073475129,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073475129,
+      "duration": 120000,
+      "endTime": 1771073595129
+    },
+    {
+      "id": 1771073476137,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073476137,
+      "duration": 120000,
+      "endTime": 1771073596137
+    },
+    {
+      "id": 1771073477147,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073477147,
+      "duration": 120000,
+      "endTime": 1771073597147
+    },
+    {
+      "id": 1771073478154,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073478154,
+      "duration": 120000,
+      "endTime": 1771073598154
+    },
+    {
+      "id": 1771073479164,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073479164,
+      "duration": 120000,
+      "endTime": 1771073599164
+    },
+    {
+      "id": 1771073480171,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073480171,
+      "duration": 120000,
+      "endTime": 1771073600171
+    },
+    {
+      "id": 1771073481177,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073481177,
+      "duration": 120000,
+      "endTime": 1771073601177
+    },
+    {
+      "id": 1771073482185,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073482185,
+      "duration": 120000,
+      "endTime": 1771073602185
+    },
+    {
+      "id": 1771073483193,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073483193,
+      "duration": 120000,
+      "endTime": 1771073603193
+    },
+    {
+      "id": 1771073484203,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073484203,
+      "duration": 120000,
+      "endTime": 1771073604203
+    },
+    {
+      "id": 1771073485212,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073485212,
+      "duration": 120000,
+      "endTime": 1771073605212
+    },
+    {
+      "id": 1771073486221,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073486221,
+      "duration": 120000,
+      "endTime": 1771073606221
+    },
+    {
+      "id": 1771073487233,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073487233,
+      "duration": 120000,
+      "endTime": 1771073607233
+    },
+    {
+      "id": 1771073488239,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073488239,
+      "duration": 120000,
+      "endTime": 1771073608239
+    },
+    {
+      "id": 1771073489252,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073489252,
+      "duration": 120000,
+      "endTime": 1771073609252
+    },
+    {
+      "id": 1771073490262,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073490262,
+      "duration": 120000,
+      "endTime": 1771073610262
+    },
+    {
+      "id": 1771073491274,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073491274,
+      "duration": 120000,
+      "endTime": 1771073611274
+    },
+    {
+      "id": 1771073492287,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073492287,
+      "duration": 120000,
+      "endTime": 1771073612287
+    },
+    {
+      "id": 1771073493300,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073493300,
+      "duration": 120000,
+      "endTime": 1771073613300
+    },
+    {
+      "id": 1771073494311,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073494311,
+      "duration": 120000,
+      "endTime": 1771073614311
+    },
+    {
+      "id": 1771073495319,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073495319,
+      "duration": 120000,
+      "endTime": 1771073615319
+    },
+    {
+      "id": 1771073496324,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073496324,
+      "duration": 120000,
+      "endTime": 1771073616324
+    },
+    {
+      "id": 1771073497331,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073497331,
+      "duration": 120000,
+      "endTime": 1771073617331
+    },
+    {
+      "id": 1771073498342,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073498342,
+      "duration": 120000,
+      "endTime": 1771073618342
+    },
+    {
+      "id": 1771073499351,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073499351,
+      "duration": 120000,
+      "endTime": 1771073619351
+    },
+    {
+      "id": 1771073500362,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073500362,
+      "duration": 120000,
+      "endTime": 1771073620362
+    },
+    {
+      "id": 1771073501368,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073501368,
+      "duration": 120000,
+      "endTime": 1771073621368
+    },
+    {
+      "id": 1771073502375,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073502375,
+      "duration": 120000,
+      "endTime": 1771073622375
+    },
+    {
+      "id": 1771073503388,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073503388,
+      "duration": 120000,
+      "endTime": 1771073623388
+    },
+    {
+      "id": 1771073504403,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073504403,
+      "duration": 120000,
+      "endTime": 1771073624403
+    },
+    {
+      "id": 1771073505413,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073505413,
+      "duration": 120000,
+      "endTime": 1771073625413
+    },
+    {
+      "id": 1771073506422,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073506422,
+      "duration": 120000,
+      "endTime": 1771073626422
+    },
+    {
+      "id": 1771073507435,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073507435,
+      "duration": 120000,
+      "endTime": 1771073627435
+    },
+    {
+      "id": 1771073508443,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073508443,
+      "duration": 120000,
+      "endTime": 1771073628443
+    },
+    {
+      "id": 1771073509453,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073509453,
+      "duration": 120000,
+      "endTime": 1771073629453
+    },
+    {
+      "id": 1771073510459,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073510459,
+      "duration": 120000,
+      "endTime": 1771073630459
+    },
+    {
+      "id": 1771073511468,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073511468,
+      "duration": 120000,
+      "endTime": 1771073631468
+    },
+    {
+      "id": 1771073512481,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073512481,
+      "duration": 120000,
+      "endTime": 1771073632481
+    },
+    {
+      "id": 1771073513487,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073513487,
+      "duration": 120000,
+      "endTime": 1771073633487
+    },
+    {
+      "id": 1771073514494,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073514494,
+      "duration": 120000,
+      "endTime": 1771073634494
+    },
+    {
+      "id": 1771073515504,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073515505,
+      "duration": 120000,
+      "endTime": 1771073635505
+    },
+    {
+      "id": 1771073516514,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073516514,
+      "duration": 120000,
+      "endTime": 1771073636514
+    },
+    {
+      "id": 1771073517526,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073517526,
+      "duration": 120000,
+      "endTime": 1771073637526
+    },
+    {
+      "id": 1771073518536,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073518536,
+      "duration": 120000,
+      "endTime": 1771073638536
+    },
+    {
+      "id": 1771073519545,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073519545,
+      "duration": 120000,
+      "endTime": 1771073639545
+    },
+    {
+      "id": 1771073520553,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073520553,
+      "duration": 120000,
+      "endTime": 1771073640553
+    },
+    {
+      "id": 1771073521566,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073521566,
+      "duration": 120000,
+      "endTime": 1771073641566
+    },
+    {
+      "id": 1771073522575,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073522575,
+      "duration": 120000,
+      "endTime": 1771073642575
+    },
+    {
+      "id": 1771073523575,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073523575,
+      "duration": 120000,
+      "endTime": 1771073643575
+    },
+    {
+      "id": 1771073524583,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073524583,
+      "duration": 120000,
+      "endTime": 1771073644583
+    },
+    {
+      "id": 1771073525590,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073525590,
+      "duration": 120000,
+      "endTime": 1771073645590
+    },
+    {
+      "id": 1771073526600,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073526600,
+      "duration": 120000,
+      "endTime": 1771073646600
+    },
+    {
+      "id": 1771073527613,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073527613,
+      "duration": 120000,
+      "endTime": 1771073647613
+    },
+    {
+      "id": 1771073528624,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073528624,
+      "duration": 120000,
+      "endTime": 1771073648624
+    },
+    {
+      "id": 1771073529633,
+      "name": "BOSS_FINAL",
+      "description": "Le Boss Final approche!",
+      "effect": "BOSS",
+      "startTime": 1771073529633,
+      "duration": 120000,
+      "endTime": 1771073649633
     }
   ],
   "activeEffects": [],
   "config": {
     "maxTeams": 20,
-    "pointsMultiplier": 1,
+    "pointsMultiplier": 2,
     "autoSave": true
   }
 }

@@ -1,0 +1,37 @@
+[
+    {
+        "id": "curiosity_landing",
+        "name": "Site Landing Curiosity",
+        "lat": -21.041793666223253,
+        "lng": 55.21772055669259,
+        "difficulty": 1
+    },
+    {
+        "id": "perseverance_jezero",
+        "name": "Cratère Jezero (Percy)",
+        "lat": -21.041793666223253,
+        "lng": 55.21772055669259,
+        "difficulty": 2
+    },
+    {
+        "id": "opportunity_meridiani",
+        "name": "Meridiani Planum",
+        "lat": -21.041793666223253,
+        "lng": 55.21772055669259,
+        "difficulty": 1
+    },
+    {
+        "id": "viking_1_chryse",
+        "name": "Chryse Planitia",
+        "lat": 22.27210,
+        "lng": 312.0465,
+        "difficulty": 3
+    },
+    {
+        "id": "phoenix_polar",
+        "name": "Vastitas Borealis",
+        "lat": 68.2188,
+        "lng": 234.2507,
+        "difficulty": 2
+    }
+]

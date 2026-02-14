@@ -14,7 +14,7 @@ const getDiceBearUrl = (name) => {
 // Génération IA via notre proxy serveur (comme generate.php)
 const tryAIGeneration = async (name) => {
     try {
-        const prompt = `${name} team logo badge, sci-fi style, neon glowing colors, vector art, minimalist, dark background, centered, high quality, no text`;
+        const prompt = name;
 
         // Appel vers notre propre serveur (pas de CORS, pas de rate-limit externe)
         const response = await fetch('/api/generate-avatar', {
