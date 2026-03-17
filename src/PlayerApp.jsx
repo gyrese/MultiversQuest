@@ -7,13 +7,13 @@
 import { useState, useEffect, Suspense, lazy } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useGame } from './context/GameContext';
-import { PlayerProvider, useGame as usePlayerGame } from './context/PlayerContext';
+import { PlayerProvider, usePlayer } from './context/PlayerContext';
 import { getAvatarUrl } from './utils/avatars';
 import Hub from './components/Hub';
 import './index.css';
 import DebugPanel from './components/debug/DebugPanel';
 import TeamAvatar from './components/TeamAvatar';
-import SaveTransferModal from './components/SaveTransferModal';
+import GameLobby from './components/GameLobby';
 
 // Lazy load activities pour optimiser le bundle initial
 // CORE
@@ -47,10 +47,25 @@ const ChihiroBath = lazy(() => import('./activities/ChihiroBath.jsx'));
 // BATCH 4 (Odyssée Spatiale Complete)
 const AlienSurvie = lazy(() => import('./activities/AlienSurvie.jsx'));
 const InterstellarMorse = lazy(() => import('./activities/InterstellarMorse.jsx'));
+const GravitySlingshot = lazy(() => import('./activities/GravitySlingshot.jsx'));
 
 // BATCH 5 (Heroic Fantasy Complete)
 const CoursPotions = lazy(() => import('./activities/CoursPotions.jsx'));
 const OracleSmaug = lazy(() => import('./activities/OracleSmaug.jsx'));
+
+// BATCH 6 (Horreur & Robots Start)
+const RingVHS = lazy(() => import('./activities/RingVHS.jsx'));
+const SkynetCode = lazy(() => import('./activities/SkynetCode.jsx'));
+const SawEscape = lazy(() => import('./activities/SawEscape.jsx'));
+const OverlookMaze = lazy(() => import('./activities/OverlookMaze.jsx'));
+const PennywiseRunner = lazy(() => import('./activities/PennywiseRunner.jsx'));
+const ThreeLaws = lazy(() => import('./activities/ThreeLaws.jsx'));
+const VoightKampff = lazy(() => import('./activities/VoightKampff.jsx'));
+
+// BATCH 7 (Préhistoire)
+const SkullIsland = lazy(() => import('./activities/SkullIsland.jsx'));
+const PrimalCommunication = lazy(() => import('./activities/PrimalCommunication.jsx'));
+const PrimalHunt = lazy(() => import('./activities/PrimalHunt.jsx'));
 
 
 // Map des composants d'activité
@@ -85,10 +100,33 @@ const ACTIVITY_MAP = {
   // Batch 4 Additions
   'alien_survie': AlienSurvie,
   'interstellar_morse': InterstellarMorse,
+  'apollo_slingshot': GravitySlingshot,
 
   // Batch 5 Additions
   'hp_potions': CoursPotions,
   'hobbit_riddler': OracleSmaug,
+
+  // Batch 6 Additions
+  'ring_vhs': RingVHS,
+  'terminator_code': SkynetCode,
+  'saw_escape': SawEscape,
+  'shining_labyrinth': OverlookMaze,
+  'it_peurs': PennywiseRunner,
+  'irobot_lois': ThreeLaws,
+  'bladerunner_test': VoightKampff,
+
+  // Batch 7 Additions
+  'kong_survie': SkullIsland,
+  'planete_singes': PrimalCommunication,
+  'prehistoric_hunt': PrimalHunt,
+
+  // À développer (fallback ComingSoon explicite)
+  'inception_reves': ComingSoon,
+  'strange_dimensions': ComingSoon,
+  'olive_tom_tir': ComingSoon,
+  'tlou_clickers': ComingSoon,
+  'madmax_fury': ComingSoon,
+  'walking_dead_defense': ComingSoon,
 
   // Quizzes
   'quiz_spatiale': GenericQuiz,
@@ -125,28 +163,30 @@ function LoadingSpinner({ message = "Chargement..." }) {
 function TeamLogin({ onJoinSuccess }) {
   const { connected, createTeam, gameState } = useGame();
   const [teamName, setTeamName] = useState('');
-
   const [isJoining, setIsJoining] = useState(false);
   const [error, setError] = useState(null);
-  const [showImportModal, setShowImportModal] = useState(false);
 
-  // Check for existing team in localStorage
-  useEffect(() => {
-    const savedTeamId = localStorage.getItem('teamId');
-    const savedToken = localStorage.getItem('teamToken');
-    const savedName = localStorage.getItem('teamName');
-    const savedStyle = localStorage.getItem('teamAvatarStyle');
+  // Nom sauvegardé pour le rejoin rapide (teamId effacé par éjection)
+  const savedName = localStorage.getItem('teamName');
+  const savedTeamId = localStorage.getItem('teamId');
+  const canAutoRejoin = savedName && !savedTeamId; // teamId effacé = nouvelle soirée
 
-    if (savedTeamId && savedToken && savedName) {
-      // Auto-login with saved credentials
-      onJoinSuccess({
-        teamId: savedTeamId,
-        token: savedToken,
-        name: savedName,
-        avatarStyle: savedStyle || 'bottts'
-      });
+  const handleQuickRejoin = async () => {
+    if (!savedName || !connected) return;
+    setIsJoining(true);
+    setError(null);
+    const result = await createTeam(savedName, 'pollinations');
+    if (result.error) {
+      setError(result.error);
+      setIsJoining(false);
+    } else {
+      localStorage.setItem('teamId', result.teamId);
+      localStorage.setItem('teamToken', result.token);
+      localStorage.setItem('teamName', savedName);
+      localStorage.setItem('teamAvatarStyle', 'pollinations');
+      onJoinSuccess({ teamId: result.teamId, token: result.token, name: savedName, avatarStyle: 'pollinations' });
     }
-  }, [onJoinSuccess]);
+  };
 
   const handleCreateTeam = async () => {
     if (!teamName.trim() || teamName.length < 2) {
@@ -269,6 +309,29 @@ function TeamLogin({ onJoinSuccess }) {
               </p>
             </div>
 
+            {/* Rejoin rapide si nouvelle soirée */}
+            {canAutoRejoin && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-5 p-4 rounded-xl border border-cyan-500/40 bg-cyan-900/10"
+              >
+                <p className="text-cyan-300 text-xs font-mono mb-3 uppercase tracking-widest">Nouvelle soirée — Bienvenue de retour !</p>
+                <motion.button
+                  onClick={handleQuickRejoin}
+                  disabled={!connected || isJoining}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full py-3 rounded-xl font-bold text-white text-base flex items-center justify-center gap-3 transition-all"
+                  style={{ background: 'linear-gradient(135deg, #0891b2, #7c3aed)' }}
+                >
+                  <TeamAvatar name={savedName} size={28} className="rounded-full" />
+                  <span>Continuer avec <span className="text-cyan-200">« {savedName} »</span></span>
+                </motion.button>
+                <p className="text-center text-white/30 text-xs mt-3 font-mono">— ou choisissez un nouveau nom ci-dessous —</p>
+              </motion.div>
+            )}
+
             {/* Error Message */}
             <AnimatePresence>
               {error && (
@@ -348,36 +411,12 @@ function TeamLogin({ onJoinSuccess }) {
                 )}
               </motion.button>
 
-              {/* BOUTON IMPORT PROFIL (Style Jeu Vidéo) */}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowImportModal(true)}
-                className="w-full mt-4 py-3 rounded-lg border-2 border-cyan-500/30 bg-cyan-900/10 text-cyan-400 font-bold hover:bg-cyan-900/30 hover:border-cyan-400 transition-all flex items-center justify-center gap-2"
-                style={{ fontFamily: 'Orbitron' }}
-              >
-                <span className="text-xl">⬇️</span> CHARGER UN PROFIL
-              </motion.button>
+              {/* Info reconnexion automatique */}
+              <p className="text-center text-xs text-cyan-500/60 font-mono mt-3">
+                💡 Même nom = reconnexion automatique avec ta progression
+              </p>
 
             </div>
-
-            {/* MODAL IMPORT */}
-            <SaveTransferModal
-              isOpen={showImportModal}
-              onClose={() => setShowImportModal(false)}
-              mode="import"
-              onImportSuccess={(data) => {
-                console.log("Profil importé:", data);
-                setShowImportModal(false);
-                // Login automatique avec les données importées
-                onJoinSuccess({
-                  teamId: 'imported_' + Date.now(), // Temporaire
-                  token: 'imported',
-                  name: data.teamName,
-                  avatarStyle: data.avatarStyle
-                });
-              }}
-            />
 
             {/* Teams Count */}
             <div className="mt-4 text-center text-gray-500 text-xs font-mono">
@@ -405,10 +444,11 @@ function TeamLogin({ onJoinSuccess }) {
 // ============================================
 function AppContent() {
   const { identify, connected, gameState, submitScore, currentTeam, socket } = useGame();
-  const { state: playerState, actions: playerActions } = usePlayerGame();
+  const { state: playerState, actions: playerActions } = usePlayer();
 
-  const [currentView, setCurrentView] = useState('login'); // login, hub, activity
+  const [currentView, setCurrentView] = useState('connecting'); // connecting, login, hub, activity, ejected
   const [team, setTeam] = useState(null);
+  const [ejectedMessage, setEjectedMessage] = useState('');
   const [selectedUniverse, setSelectedUniverse] = useState(null);
   const [activeActivity, setActiveActivity] = useState(null);
 
@@ -453,26 +493,75 @@ function AppContent() {
   }, [playerState, currentTeam, connected, socket]);
 
   // Identify as player when connected
-
-  // Identify as player when connected
   useEffect(() => {
     if (connected && team) {
       identify('TEAM', team.teamId);
     }
   }, [connected, team, identify]);
 
+  // CONNECTING → LOGIN ou auto-login quand le socket est prêt
+  useEffect(() => {
+    if (!connected) return;
+    if (currentView !== 'connecting') return;
+
+    const savedTeamId = localStorage.getItem('teamId');
+    const savedToken = localStorage.getItem('teamToken');
+    const savedName = localStorage.getItem('teamName');
+
+    if (savedTeamId && savedToken && savedName) {
+      // Crédentiels valides → auto-login
+      const teamData = {
+        teamId: savedTeamId,
+        token: savedToken,
+        name: savedName,
+        avatarStyle: localStorage.getItem('teamAvatarStyle') || 'bottts'
+      };
+      setTeam(teamData);
+      playerActions.initializeTeam(teamData.teamId, teamData.name, teamData.avatarStyle);
+      setCurrentView('hub');
+    } else {
+      setCurrentView('login');
+    }
+  }, [connected, currentView, playerActions]);
+
+  // Éjection serveur (nouvelle soirée) — via événement explicite
+  useEffect(() => {
+    if (!socket) return;
+    const onEjected = ({ message }) => {
+      localStorage.removeItem('teamId');
+      localStorage.removeItem('teamToken');
+      // teamName reste pour le rejoin rapide
+      playerActions.resetState();
+      setTeam(null);
+      setCurrentView('ejected');
+      // Stocker le message d'éjection pour l'afficher
+      setEjectedMessage(message || 'Nouvelle session démarrée — reconnectez-vous !');
+    };
+    socket.on('team:ejected', onEjected);
+    return () => socket.off('team:ejected', onEjected);
+  }, [socket, playerActions]);
+
   // Handlers
   const handleJoinSuccess = (teamData) => {
     setTeam(teamData);
-    playerActions.initializeTeam(teamData.name, teamData.avatarStyle || 'bottts');
+    playerActions.initializeTeam(teamData.teamId, teamData.name, teamData.avatarStyle || 'bottts');
     setCurrentView('hub');
   };
 
   const handleLogout = () => {
+    // Notify server of voluntary logout
+    if (socket && connected) {
+      socket.emit('team:logout');
+    }
+
     localStorage.removeItem('teamId');
     localStorage.removeItem('teamToken');
     localStorage.removeItem('teamName');
     localStorage.removeItem('teamAvatarStyle');
+
+    // 🧹 Clean PlayerContext state immediately
+    playerActions.resetState();
+
     setTeam(null);
     setCurrentView('login');
   };
@@ -525,6 +614,13 @@ function AppContent() {
   return (
     <>
       <AnimatePresence mode="wait">
+        {/* CONNECTING — écran de chargement initial */}
+        {currentView === 'connecting' && (
+          <motion.div key="connecting" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <LoadingSpinner message="Connexion au Nexus..." />
+          </motion.div>
+        )}
+
         {currentView === 'login' && (
           <motion.div
             key="login"
@@ -538,7 +634,43 @@ function AppContent() {
           </motion.div>
         )}
 
-        {currentView === 'hub' && team && (
+        {/* EJECTED — nouvelle session */}
+        {currentView === 'ejected' && (
+          <motion.div key="ejected" variants={pageVariants} initial="initial" animate="animate" exit="exit"
+            className="min-h-screen bg-[#0a0a15] flex flex-col items-center justify-center gap-6 p-6">
+            <motion.div
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+              className="text-6xl"
+            >🌌</motion.div>
+            <h2 className="text-2xl font-bold text-white text-center" style={{ fontFamily: 'Orbitron' }}>
+              Nouvelle soirée !
+            </h2>
+            <p className="text-gray-400 text-center font-mono text-sm max-w-xs">{ejectedMessage}</p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => setCurrentView('login')}
+              className="px-8 py-4 rounded-xl font-bold text-white text-lg"
+              style={{ background: 'linear-gradient(135deg, #0891b2, #7c3aed)' }}
+            >
+              {localStorage.getItem('teamName') ? `Rejoindre en tant que « ${localStorage.getItem('teamName')} »` : 'Rejoindre la session'}
+            </motion.button>
+            <button onClick={() => { localStorage.removeItem('teamName'); setCurrentView('login'); }}
+              className="text-xs text-gray-600 hover:text-gray-400 font-mono">
+              Changer de nom
+            </button>
+          </motion.div>
+        )}
+
+        {/* LOBBY / WAITING SCREEN */}
+        {currentView === 'hub' && team && gameState.status === 'LOBBY' && (
+          <motion.div key="waiting" variants={pageVariants} initial="initial" animate="animate" exit="exit">
+            <GameLobby team={team} onLogout={handleLogout} />
+          </motion.div>
+        )}
+
+        {currentView === 'hub' && team && gameState.status !== 'LOBBY' && (
           <motion.div
             key="hub"
             variants={pageVariants}
@@ -553,9 +685,11 @@ function AppContent() {
               <div className="flex items-center gap-2">
                 <span className={`w-2 h-2 rounded-full ${connected ? 'bg-green-500' : 'bg-red-500'}`} />
                 <span className="text-xs text-gray-400 font-mono">
-                  {gameState.status === 'PLAYING' ? '🎮 En jeu' :
-                    gameState.status === 'PAUSED' ? '⏸️ Pause' :
-                      gameState.status === 'ENDED' ? '🏁 Terminé' : '⏳ Attente'}
+                  {playerState.isSessionNight ?
+                    (playerState.sessionStatus === 'INTRO' ? '📺 Introduction' : '🌙 Session Night') :
+                    gameState.status === 'PLAYING' ? '🎮 En jeu' :
+                      gameState.status === 'PAUSED' ? '⏸️ Pause' :
+                        gameState.status === 'ENDED' ? '🏁 Terminé' : '⏳ Attente'}
                 </span>
               </div>
               {gameState.status === 'PLAYING' && gameState.globalTimer > 0 && (

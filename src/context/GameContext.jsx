@@ -7,10 +7,8 @@ import React, { createContext, useContext, useEffect, useState, useMemo, useCall
 import { io } from 'socket.io-client';
 
 // Création du contexte
-const GameContext = createContext(null);
-export default GameProvider;
+export const GameContext = createContext(null);
 
-// URL du serveur (à configurer selon l'env)
 // URL du serveur (dynamique pour le support mobile/LAN)
 const getSocketUrl = () => {
     // Si une URL spécifique est définie dans .env (ex: production), l'utiliser
@@ -59,6 +57,13 @@ export function GameProvider({ children }) {
             setConnected(true);
             // Demander l'état complet actuel (statut, phases, équipes...)
             newSocket.emit('request:fullState');
+            // Re-identifier automatiquement à chaque (re)connexion selon l'URL
+            const path = window.location.pathname;
+            if (path.includes('/warroom')) {
+                newSocket.emit('identify', { type: 'WARROOM' });
+            } else if (path.includes('/admin')) {
+                newSocket.emit('identify', { type: 'ADMIN' });
+            }
         });
 
         newSocket.on('disconnect', () => {
@@ -82,15 +87,34 @@ export function GameProvider({ children }) {
             setGameState(prev => ({ ...prev, teams }));
         });
 
-        newSocket.on('score:update', ({ teamId, newScore, ranking, history }) => {
+        newSocket.on('score:update', ({ teamId, newScore, ranking, completedActivities }) => {
+            console.log(`🎯 Score Update [${teamId}]: ${newScore}`);
+            setGameState(prev => {
+                const team = prev.teams[teamId] || { id: teamId };
+                return {
+                    ...prev,
+                    teams: {
+                        ...prev.teams,
+                        [teamId]: {
+                            ...team,
+                            score: newScore,
+                            completedActivities: completedActivities || team.completedActivities
+                        }
+                    },
+                    ranking: ranking || prev.ranking
+                };
+            });
+        });
+
+        newSocket.on('team:state', (teamData) => {
+            if (!teamData) return;
+            console.log(`👥 Team State Received [${teamData.id}]`);
             setGameState(prev => ({
                 ...prev,
                 teams: {
                     ...prev.teams,
-                    [teamId]: { ...prev.teams[teamId], score: newScore }
-                },
-                ranking: ranking || prev.ranking,
-                history: history || prev.history
+                    [teamData.id]: { ...(prev.teams[teamData.id] || {}), ...teamData }
+                }
             }));
         });
 
@@ -132,6 +156,56 @@ export function GameProvider({ children }) {
 
         newSocket.on('game:ended', ({ ranking }) => {
             setGameState(prev => ({ ...prev, status: 'ENDED', ranking }));
+        });
+
+        // --- Session Night Listeners ---
+        newSocket.on('sessionNight:state', (sessionNight) => {
+            console.log('🌙 Session Night State:', sessionNight);
+
+            // Derive active theme from current universe only if active
+            let newTheme = 'default';
+            if (sessionNight && ['UNIVERSE_ACTIVE', 'QUIZ_ACTIVE', 'UNIVERSE_COMPLETE'].includes(sessionNight.status)) {
+                if (sessionNight.universes && sessionNight.universes.length > 0) {
+                    const currentU = sessionNight.universes[sessionNight.currentUniverseIndex];
+                    if (currentU) {
+                        newTheme = currentU.universeId;
+                    }
+                }
+            }
+
+            setGameState(prev => ({
+                ...prev,
+                sessionNight,
+                themeUniverse: newTheme // Update theme automatically
+            }));
+        });
+
+        newSocket.on('sessionNight:time', (seconds) => {
+            setGameState(prev => {
+                if (prev.sessionNight) {
+                    return {
+                        ...prev,
+                        sessionNight: {
+                            ...prev.sessionNight,
+                            tickRemainingSeconds: seconds
+                        }
+                    };
+                }
+                return prev;
+            });
+        });
+
+        newSocket.on('sessionNight:universeWinner', (data) => {
+            console.log('🏆 Vainqueur Univers:', data);
+            // On pourrait afficher une notif toast ici
+        });
+
+        newSocket.on('sessionNight:complete', (data) => {
+            console.log('🏁 Fin Session Night:', data);
+        });
+
+        newSocket.on('sessionNight:tick', ({ remaining }) => {
+            // Optionnel: update timer local si besoin de précision
         });
 
         newSocket.on('warroom:theme', (theme) => {
@@ -265,30 +339,15 @@ export function GameProvider({ children }) {
         }
     }, [SERVER_URL, socket]);
 
-    // Restauration de session automatique (Placé après identify/submitScore pour éviter ReferenceError)
-    useEffect(() => {
-        if (socket && connected) {
-            // Identifier le rôle basé sur l'URL ou le stockage
-            const path = window.location.pathname;
-            if (path.includes('/warroom')) {
-                identify('WARROOM');
-            } else if (path.includes('/admin')) {
-                identify('ADMIN');
-            } else {
-                // Tenter de restaurer une session équipe
-                const savedTeamId = localStorage.getItem('teamId');
-                const savedToken = localStorage.getItem('teamToken');
-                if (savedTeamId && savedToken) {
-                    console.log("🔄 Restauration session équipe:", savedTeamId);
-                    identify('TEAM', savedTeamId);
-                }
-            }
-        }
-    }, [socket, connected, identify]);
-
     // === ACTIONS ADMIN ===
 
     const adminActions = useMemo(() => ({
+        // Nouvelle soirée : reset complet + LOBBY
+        newSession: () => {
+            if (!socket) return;
+            socket.emit('admin:action', { type: 'NEW_SESSION' });
+        },
+
         // Démarrer le jeu
         startGame: () => {
             if (!socket) return;
@@ -346,6 +405,21 @@ export function GameProvider({ children }) {
             });
         },
 
+        // Lancer une vidéo plein écran sur la WarRoom (url=null pour stopper)
+        playVideo: (url) => {
+            if (!socket) return;
+            socket.emit('admin:action', { type: 'PLAY_VIDEO', payload: { url } });
+        },
+
+        // Déclencher un Happening (vidéo + bonus)
+        triggerHappening: (happening) => {
+            if (!socket) return;
+            socket.emit('admin:action', {
+                type: 'SESSION_TRIGGER_HAPPENING',
+                payload: { happening }
+            });
+        },
+
         // Changer le thème du WarRoom
         setWarRoomTheme: (theme) => {
             if (!socket) return;
@@ -386,6 +460,63 @@ export function GameProvider({ children }) {
                 console.error('Erreur suppression:', error);
                 return { error: 'Erreur de connexion' };
             }
+        },
+
+        // === SESSION NIGHT ACTIONS ===
+
+        // Créer une nouvelle session
+        createSession: (config) => {
+            if (!socket) return;
+            // config: { universes: [], introVideoUrl, requiredTalismans }
+            socket.emit('admin:action', {
+                type: 'SESSION_CREATE',
+                payload: config
+            });
+        },
+
+        // Lancer la session (Intro)
+        launchSession: () => {
+            if (!socket) return;
+            socket.emit('admin:action', { type: 'SESSION_LAUNCH' });
+        },
+
+        // Retour au Quartier Général (depuis INTRO ou UNIVERSE_COMPLETE)
+        openHeadquarters: () => {
+            if (!socket) return;
+            socket.emit('admin:action', { type: 'SESSION_OPEN_HEADQUARTERS' });
+        },
+
+        // Ouvrir l'univers suivant
+        openNextUniverse: () => {
+            if (!socket) return;
+            socket.emit('admin:action', { type: 'SESSION_NEXT_UNIVERSE' });
+        },
+
+        // Ouvrir un univers spécifique (si besoin manuel)
+        openUniverse: (universeId) => {
+            if (!socket) return;
+            socket.emit('admin:action', {
+                type: 'SESSION_OPEN_UNIVERSE',
+                payload: { universeId }
+            });
+        },
+
+        // Forcer la fin du timer univers (passe au Quiz)
+        forceStartQuiz: () => {
+            if (!socket) return;
+            socket.emit('admin:action', { type: 'SESSION_FORCE_END_UNIVERSE' });
+        },
+
+        // Fermer le quiz (passe à UNIVERSE_COMPLETE -> Attente Next)
+        closeQuiz: () => {
+            if (!socket) return;
+            socket.emit('admin:action', { type: 'SESSION_CLOSE_QUIZ' });
+        },
+
+        // Terminer la session
+        endSession: () => {
+            if (!socket) return;
+            socket.emit('admin:action', { type: 'SESSION_END' });
         }
     }), [socket]);
 
@@ -402,12 +533,23 @@ export function GameProvider({ children }) {
             .sort((a, b) => b.score - a.score);
     }, [gameState.teams]);
 
-    // Restauration de session automatique (Correctement placée après identify)
+    // Restauration de session automatique (unique point d'entrée)
     useEffect(() => {
         if (!socket || !connected) return;
+        if (role) return; // Déjà identifié, ne pas re-trigger
 
-        if (role) return;
+        // 1. Détection par URL (WarRoom / Admin)
+        const path = window.location.pathname;
+        if (path.includes('/warroom')) {
+            identify('WARROOM');
+            return;
+        }
+        if (path.includes('/admin')) {
+            identify('ADMIN');
+            return;
+        }
 
+        // 2. Restauration session équipe depuis localStorage
         const storedTeamId = localStorage.getItem('teamId');
         if (storedTeamId) {
             console.log('🔄 Restauration de session Équipe:', storedTeamId);
@@ -415,6 +557,7 @@ export function GameProvider({ children }) {
             return;
         }
 
+        // 3. Restauration session admin depuis localStorage
         const adminToken = localStorage.getItem('adminToken');
         if (adminToken) {
             console.log('🔄 Restauration de session Admin');
@@ -453,3 +596,5 @@ export function useGame() {
     }
     return context;
 }
+
+export default GameProvider;

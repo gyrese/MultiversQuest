@@ -13,6 +13,7 @@ export const UNIVERSES = {
         name: 'ODYSSÉE SPATIALE',
         subtitle: 'Aux confins de l\'univers',
         icon: '🚀',
+        videoUrl: '/video/universes/odyssee_spatiale.mp4',
         image: '/images/universes/odyssee_spatiale.png',
         colors: {
             primary: '#00d4ff',
@@ -22,6 +23,16 @@ export const UNIVERSES = {
         },
         background: 'linear-gradient(135deg, #0a1628 0%, #1a0a2e 50%, #0a1628 100%)',
         description: 'Explorez les mystères de l\'espace profond',
+        happening: {
+            videoUrl: '/video/happenings/mars_patates.mp4',
+            title: '🥔 TRANSMISSION DEPUIS MARS',
+            subtitle: 'Mark Watney a réussi à faire pousser des patates !',
+            description: 'Un astronaute coincé sur Mars a réussi l\'impossible : cultiver des pommes de terre dans le sol martien. Pour fêter ça, POINTS x2 pendant 5 minutes pour toutes les séries remportées !',
+            effectType: 'DOUBLE_POINTS',
+            effectDuration: 300, // secondes
+            bonusLabel: '🥔 BONUS PATATES MARTIENNES — x2 pts pendant 5 min !',
+            color: '#00d4ff',
+        },
         activities: {
             rencontre_3e_type: {
                 id: 'rencontre_3e_type',
@@ -84,6 +95,16 @@ export const UNIVERSES = {
                 difficulty: 3,
                 maxPoints: 350,
             },
+            apollo_slingshot: {
+                id: 'apollo_slingshot',
+                name: 'Gravitational Slingshot',
+                film: 'Apollo 13 (1995)',
+                icon: '🪐',
+                type: 'physics',
+                description: 'Utilisez la gravité des planètes pour guider votre sonde vers la station spatiale',
+                difficulty: 4,
+                maxPoints: 500,
+            },
             quiz_spatiale: {
                 id: 'quiz_spatiale',
                 name: 'Le Grand Quiz Spatial',
@@ -103,6 +124,7 @@ export const UNIVERSES = {
         name: 'ROYAUMES LÉGENDAIRES',
         subtitle: 'Magie et aventures épiques',
         icon: '⚔️',
+        videoUrl: '/video/universes/royaumes_legendaires.mp4',
         image: '/images/universes/royaumes_legendaires.png',
         colors: {
             primary: '#ffd700',
@@ -112,6 +134,16 @@ export const UNIVERSES = {
         },
         background: 'linear-gradient(135deg, #1a0f00 0%, #2d1810 50%, #1a0f00 100%)',
         description: 'Entrez dans des mondes de magie et de légendes',
+        happening: {
+            videoUrl: '/video/happenings/dragon_tresor.mp4',
+            title: '🐉 MESSAGE DU DRAGON SMAUG',
+            subtitle: 'Smaug a perdu une écaille de son trésor !',
+            description: 'Le dragon Smaug, furieux d\'avoir perdu une écaille en or, offre une récompense à quiconque prouvera sa valeur. POINTS x2 pendant 5 minutes pour toutes les séries remportées !',
+            effectType: 'DOUBLE_POINTS',
+            effectDuration: 300,
+            bonusLabel: '🐉 COLÈRE DE SMAUG — x2 pts pendant 5 min !',
+            color: '#ffd700',
+        },
         activities: {
             sceau_runique: {
                 id: 'sceau_runique',
@@ -172,6 +204,7 @@ export const UNIVERSES = {
         name: 'TÉNÈBRES ÉTERNELLES',
         subtitle: 'Affrontez vos peurs',
         icon: '🧟',
+        videoUrl: '/video/universes/tenebres_eternelles.mp4',
         image: '/images/universes/tenebres_eternelles.png',
         colors: {
             primary: '#dc2626',
@@ -181,6 +214,16 @@ export const UNIVERSES = {
         },
         background: 'linear-gradient(135deg, #0a0a0a 0%, #1a0505 50%, #0a0a0a 100%)',
         description: 'Survivez aux cauchemars les plus terrifiants',
+        happening: {
+            videoUrl: '/video/happenings/pennywise_appel.mp4',
+            title: '📞 APPEL DE L\'INCONNU',
+            subtitle: 'Pennywise vous a appelé... et il offre des points !',
+            description: 'Un appel mystérieux depuis les égouts de Derry... Pennywise est de bonne humeur ce soir. Il offre le double des points à ceux qui osent affronter leurs peurs ! x2 pendant 5 minutes !',
+            effectType: 'DOUBLE_POINTS',
+            effectDuration: 300,
+            bonusLabel: '🎈 FAVEUR DE PENNYWISE — x2 pts pendant 5 min !',
+            color: '#dc2626',
+        },
         activities: {
             ring_vhs: {
                 id: 'ring_vhs',
@@ -241,6 +284,7 @@ export const UNIVERSES = {
         name: 'MÉCANIQUE DU FUTUR',
         subtitle: 'Homme vs Machine',
         icon: '🤖',
+        videoUrl: '/video/universes/mecanique_futur.mp4',
         image: '/images/universes/mecanique_futur.png',
         colors: {
             primary: '#00ff88',
@@ -250,6 +294,16 @@ export const UNIVERSES = {
         },
         background: 'linear-gradient(135deg, #001a0d 0%, #0d1a14 50%, #001a0d 100%)',
         description: 'Explorez les frontières entre l\'homme et la machine',
+        happening: {
+            videoUrl: '/video/happenings/glitch_matrix.mp4',
+            title: '💊 GLITCH DANS LA MATRICE',
+            subtitle: 'Erreur système détectée — Exploitation en cours !',
+            description: 'Une faille critique a été détectée dans la Matrice. Les agents sont débordés. Profitez-en : POINTS x2 pendant 5 minutes pour toutes les séries remportées avant qu\'ils ne corrigent le bug !',
+            effectType: 'DOUBLE_POINTS',
+            effectDuration: 300,
+            bonusLabel: '💊 GLITCH MATRICE — x2 pts pendant 5 min !',
+            color: '#00ff88',
+        },
         activities: {
             matrix_choix: {
                 id: 'matrix_choix',
@@ -310,6 +364,7 @@ export const UNIVERSES = {
         name: 'ÈRES PERDUES',
         subtitle: 'Quand les géants régnaient',
         icon: '🦕',
+        videoUrl: '/video/universes/eres_perdues.mp4',
         image: '/images/universes/eres_perdues.png',
         colors: {
             primary: '#22c55e',
@@ -319,6 +374,16 @@ export const UNIVERSES = {
         },
         background: 'linear-gradient(135deg, #0a1a0a 0%, #1a2a1a 50%, #0a1a0a 100%)',
         description: 'Voyagez dans des ères où l\'homme n\'existait pas',
+        happening: {
+            videoUrl: '/video/happenings/dino_fuite.mp4',
+            title: '🦕 ALERTE DINOSAURE !',
+            subtitle: 'Un T-Rex s\'est échappé du parc !',
+            description: 'Dennis Nedry a encore foiré ! Un T-Rex est en liberté. Le chaos est total. Dans la panique générale, les systèmes de scoring sont en mode TURBO : x2 points pendant 5 minutes !',
+            effectType: 'DOUBLE_POINTS',
+            effectDuration: 300,
+            bonusLabel: '🦕 PANIQUE T-REX — x2 pts pendant 5 min !',
+            color: '#22c55e',
+        },
         activities: {
             jurassic_hack: {
                 id: 'jurassic_hack',
@@ -380,6 +445,7 @@ export const UNIVERSES = {
         name: 'RÉALITÉS ALTÉRÉES',
         subtitle: 'Au-delà du temps et de l\'espace',
         icon: '🎭',
+        videoUrl: '/video/universes/realites_alterees.mp4',
         image: '/images/universes/realites_alterees.png',
         colors: {
             primary: '#a855f7',
@@ -450,6 +516,7 @@ export const UNIVERSES = {
         name: 'GÉNÉRATION CLUB DO\'',
         subtitle: 'Pas de pitié pour les croissants',
         icon: '📺',
+        videoUrl: '/video/universes/club_dorothee.mp4',
         image: '/images/universes/club_dorothee.png',
         colors: {
             primary: '#ff00ff',
@@ -519,6 +586,7 @@ export const UNIVERSES = {
         name: 'MONDES ANIMÉS',
         subtitle: 'Rêves et Imagination',
         icon: '🎬',
+        videoUrl: '/video/universes/animation_world.mp4',
         image: '/images/universes/animationworld.png',
         colors: {
             primary: '#fbbf24',
@@ -588,6 +656,7 @@ export const UNIVERSES = {
         name: 'TERRES DÉSOLÉES',
         subtitle: 'Survivre à l\'apocalypse',
         icon: '☢️',
+        videoUrl: '/video/universes/post_apo.mp4',
         image: '/images/universes/postapo.png',
         colors: {
             primary: '#ea580c',

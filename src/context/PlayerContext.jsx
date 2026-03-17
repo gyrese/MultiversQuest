@@ -5,6 +5,7 @@
 
 import { createContext, useContext, useReducer, useMemo, useEffect } from 'react';
 import { UNIVERSES, UNIVERSE_ORDER } from '../data/universes';
+import { GameContext } from './GameContext'; // Import GameContext to read server state
 
 const PlayerContext = createContext(null);
 
@@ -37,6 +38,7 @@ function createInitialState() {
 
     return {
         isInitialized: false,
+        teamId: null, // Add teamId to track ownership
         teamName: '',
         avatarStyle: 'bottts', // Style DiceBear par défaut
         points: 0,
@@ -51,12 +53,34 @@ function createInitialState() {
 function playerReducer(state, action) {
     switch (action.type) {
         case 'INITIALIZE_TEAM': {
+            const { teamId, teamName, avatarStyle } = action.payload;
+
+            // Check if we are switching to a different team
+            // If so, we must RESET all progress to avoid leak from previous session
+            if (teamId && state.teamId && state.teamId !== teamId) {
+                console.log(`🔄 Changement d'équipe détecté (${state.teamId} -> ${teamId}). Reset du profile.`);
+                const freshState = createInitialState();
+                return {
+                    ...freshState,
+                    isInitialized: true,
+                    teamId,
+                    teamName,
+                    avatarStyle: avatarStyle || 'bottts',
+                };
+            }
+
             return {
                 ...state,
                 isInitialized: true,
-                teamName: action.payload.teamName,
-                avatarStyle: action.payload.avatarStyle || 'bottts',
+                teamId, // Ensure teamId is set
+                teamName,
+                avatarStyle: avatarStyle || 'bottts',
             };
+        }
+
+        case 'RESET_STATE': {
+            console.log("🧹 Reset complet de l'état joueur");
+            return createInitialState();
         }
 
         case 'UNLOCK_UNIVERSE': {
@@ -169,7 +193,7 @@ function playerReducer(state, action) {
 
             return {
                 ...state,
-                points: (currentPoints || 0) + (safePointsToAdd || 0),
+                // points: (currentPoints || 0) + (safePointsToAdd || 0), // DEPRECATED: Points are now server-authoritative
                 fragments: isUniverseCompleted && !wasCompleted ? state.fragments + 1 : state.fragments,
                 universes: newUniverses,
             };
@@ -190,6 +214,7 @@ function playerReducer(state, action) {
         }
 
         case 'SYNC_SCORE': {
+            // Keep for offline/local display but derivedState will override
             return {
                 ...state,
                 points: action.payload
@@ -272,10 +297,14 @@ export function PlayerProvider({ children }) {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     }, [state]);
 
-    // Actions
     const actions = useMemo(() => ({
-        initializeTeam: (teamName, avatarStyle = 'bottts') => {
-            dispatch({ type: 'INITIALIZE_TEAM', payload: { teamName, avatarStyle } });
+        initializeTeam: (teamId, teamName, avatarStyle = 'bottts') => {
+            dispatch({ type: 'INITIALIZE_TEAM', payload: { teamId, teamName, avatarStyle } });
+        },
+
+        resetState: () => {
+            dispatch({ type: 'RESET_STATE' });
+            localStorage.removeItem(STORAGE_KEY);
         },
 
         unlockUniverse: (universeId) => {
@@ -346,7 +375,147 @@ export function PlayerProvider({ children }) {
         },
     }), [state]);
 
-    const value = useMemo(() => ({ state, actions }), [state, actions]);
+    // ─────────────────────────────────────────────────────────────────────────────
+    // 🌙 SESSION NIGHT INTERCEPTOR
+    // ─────────────────────────────────────────────────────────────────────────────
+    // On doit lire le GameContext pour savoir si une Session Night est active
+    // et filtrer l'accès aux univers en conséquence.
+    const gameContext = useContext(GameContext);
+    const sessionNight = gameContext?.gameState?.sessionNight;
+
+    const derivedState = useMemo(() => {
+        if (!state) return null;
+
+        // --- SOURCE DE VÉRITÉ : SCORE SERVEUR ---
+        const gameState = gameContext?.gameState;
+        const serverTeamData = state.teamId ? gameState?.teams?.[state.teamId] : null;
+        const serverScore = typeof serverTeamData?.score === 'number' ? serverTeamData.score : null;
+
+        // Si pas de session existante, on reste en mode Standard
+        if (!sessionNight) {
+            return {
+                ...state,
+                universes: state.universes, // Garder l'état local standard
+                isSessionNight: false,
+                points: serverScore !== null ? serverScore : state.points
+            };
+        }
+
+        // --- MODE SESSION NIGHT DÉTECTÉ ---
+        // Même si DRAFT ou COMPLETE, on passe en mode Session Night pour éviter le fallback Standard
+        // Cela permet d'afficher des écrans d'attente ou de fin spécifiques
+        const isSessionActive = true;
+        const currentStatus = sessionNight.status;
+
+        console.log(`🌙 PlayerContext: Mode Session Night Actif (Statut: ${currentStatus})`);
+
+        // --- MODE SESSION NIGHT ACTIF ---
+        // On construit une vue "filtrée" des univers
+        const activeSnUniverseIndex = sessionNight.currentUniverseIndex;
+        const activeSnUniverseData = sessionNight.universes[activeSnUniverseIndex];
+
+        // DEBUG: Tracer l'univers actif
+        console.log('[PlayerContext] Session Night actif:', {
+            status: sessionNight.status,
+            currentIndex: activeSnUniverseIndex,
+            activeUniverse: activeSnUniverseData?.universeId,
+            selectedChallenges: activeSnUniverseData?.selectedChallengeIds,
+            quizId: activeSnUniverseData?.quizActivityId,
+            allUniverses: sessionNight.universes?.map(u => u.universeId)
+        });
+
+        // Si on est en INTRO, DRAFT, ATTENTE GM ou FINI, tout est verrouillé
+        const isLockedState = ['INTRO', 'HEADQUARTERS', 'DRAFT', 'SESSION_COMPLETE'].includes(sessionNight.status);
+
+        const filteredUniverses = {};
+
+        // On parcourt tous les univers possibles, mais on lock tout
+        // SAUF l'univers courant de la session
+        UNIVERSE_ORDER.forEach((uId) => {
+            // Est-ce l'univers actif ?
+            const isActiveUniverse = activeSnUniverseData && activeSnUniverseData.universeId === uId;
+
+            // Récupérer l'état local (pour garder les checkmarks des activités finies)
+            const localUnivState = state.universes[uId] || { activities: {}, completedActivities: 0 };
+
+            // Calculer le statut de l'univers
+            let derivedStatus = 'locked';
+            if (isActiveUniverse && !isLockedState) {
+                derivedStatus = 'available'; // Ouvert !
+            }
+
+            // Filtrer les activités
+            const derivedActivities = {};
+            // On prend la config statique pour savoir quelles activités existent
+            const staticActivities = UNIVERSES[uId]?.activities || {};
+
+            Object.keys(staticActivities).forEach(activityId => {
+                const localActState = localUnivState.activities[activityId] || { status: 'locked', bestScore: 0 };
+
+                // Par défaut locked
+                let actStatus = 'locked';
+
+                if (isActiveUniverse && !isLockedState) {
+                    // Robustesse : Check ID configuré OU type 'quiz'
+                    const activityConfig = staticActivities[activityId];
+                    const isQuiz = (activeSnUniverseData?.quizActivityId === activityId) || activityConfig?.type === 'quiz';
+                    // Est-ce un défi sélectionné par le GM pour ce soir ?
+                    const isSelectedChallenge = activeSnUniverseData?.selectedChallengeIds?.includes(activityId);
+
+                    if (sessionNight.status === 'UNIVERSE_ACTIVE') {
+                        if (isSelectedChallenge) {
+                            // Défi sélectionné → toujours available (pas de progression séquentielle)
+                            actStatus = 'available';
+                        }
+                        // Quiz et activités non-sélectionnées → restent 'locked' (cachées par UniverseCard)
+                    } else if (sessionNight.status === 'QUIZ_ACTIVE') {
+                        // Seul le quiz est accessible, tout le reste est verrouillé
+                        actStatus = isQuiz ? 'available' : 'locked';
+                    } else {
+                        // UNIVERSE_COMPLETE ou autre → tout verrouillé
+                        actStatus = 'locked';
+                    }
+
+                    // Si localement c'est 'completed', on garde 'completed' (visuel checkmark)
+                    // Mais SEULEMENT si l'activité est censée être visible (selected ou quiz actif)
+                    if (localActState.status === 'completed' && (isSelectedChallenge || (isQuiz && sessionNight.status === 'QUIZ_ACTIVE'))) {
+                        actStatus = 'completed';
+                    }
+                }
+
+                derivedActivities[activityId] = {
+                    ...localActState,
+                    status: actStatus
+                };
+            });
+
+            filteredUniverses[uId] = {
+                ...localUnivState,
+                status: derivedStatus,
+                activities: derivedActivities
+            };
+        });
+
+        // Fallback Session Night score if applicable
+        const sessionScore = (state.teamId && sessionNight.perTeam && typeof sessionNight.perTeam[state.teamId]?.score === 'number')
+            ? sessionNight.perTeam[state.teamId].score
+            : null;
+
+        return {
+            ...state,
+            universes: filteredUniverses,
+            isSessionNight: true, // Flag pour l'UI
+            sessionStatus: sessionNight.status,
+            sessionIntroVideoUrl: sessionNight.introVideoUrl,
+            // Liste des univers de la session pour l'affichage dans le Hub
+            sessionUniverseIds: sessionNight.universes.map(u => u.universeId),
+            // Priorité: 1. Score Serveur Global | 2. Score Session Serveur | 3. Score Local (Cache)
+            points: serverScore !== null ? serverScore : (sessionScore !== null ? sessionScore : state.points),
+        };
+
+    }, [state, sessionNight, gameContext?.gameState?.teams]);
+
+    const value = useMemo(() => ({ state: derivedState, actions }), [derivedState, actions]);
 
     return (
         <PlayerContext.Provider value={value}>
@@ -355,11 +524,15 @@ export function PlayerProvider({ children }) {
     );
 }
 
-// Hook
-export function useGame() {
+// Hook principal — utiliser usePlayer() pour accéder au contexte joueur
+export function usePlayer() {
     const context = useContext(PlayerContext);
     if (!context) {
-        throw new Error('useGame must be used within PlayerProvider');
+        throw new Error('usePlayer must be used within PlayerProvider');
     }
     return context;
 }
+
+// Alias déprécié pour compatibilité (préférer usePlayer)
+export const useGame = usePlayer;
+

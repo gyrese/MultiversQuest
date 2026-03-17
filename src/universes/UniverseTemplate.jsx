@@ -11,7 +11,7 @@
  */
 
 import { motion } from 'framer-motion';
-import { useGame } from '../context/PlayerContext';
+import { usePlayer } from '../context/PlayerContext';
 
 // Configuration du template
 const UNIVERSE_ID = 'template'; // Remplacez par: jurassic, starwars, harrypotter, mario
@@ -23,7 +23,7 @@ const THEME_COLORS = {
 };
 
 export default function UniverseTemplate({ onComplete, onExit }) {
-    const { state, actions } = useGame();
+    const { state, actions } = usePlayer();
 
     // Exemple de complétion d'univers
     const handleComplete = () => {

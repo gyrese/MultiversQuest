@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useGame } from '../context/PlayerContext';
+import { usePlayer } from '../context/PlayerContext';
 import { UNIVERSES, UNIVERSE_ORDER } from '../data/universes';
 import UniverseCard from './UniverseCard';
 import TeamAvatar from './TeamAvatar';
-import SaveTransferModal from './SaveTransferModal'; // Assurez-vous que le chemin est correct relative à Hub
+
 
 export default function Hub({ onStartActivity }) {
-    const { state, actions } = useGame();
+    const { state, actions } = usePlayer();
     const [showInventory, setShowInventory] = useState(false);
-    const [showExportModal, setShowExportModal] = useState(false);
+
     const [selectedUniverse, setSelectedUniverse] = useState(null);
     const [selectedActivity, setSelectedActivity] = useState(null);
 
@@ -32,6 +32,7 @@ export default function Hub({ onStartActivity }) {
 
     const completedUniverses = actions.getCompletedCount();
     const totalUniverses = UNIVERSE_ORDER.length;
+
 
     return (
         <div className="min-h-screen bg-[#030308] relative overflow-hidden">
@@ -220,26 +221,7 @@ export default function Hub({ onStartActivity }) {
                             🎒
                         </motion.button>
 
-                        {/* Export Profile */}
-                        <motion.button
-                            whileHover={{ scale: 1.1, rotate: -5 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={() => setShowExportModal(true)}
-                            className="w-11 h-11 ml-2 rounded-xl flex items-center justify-center text-xl transition-all"
-                            style={{
-                                background: 'rgba(255,0,255,0.1)',
-                                border: '1px solid rgba(255,0,255,0.2)',
-                            }}
-                        >
-                            💾
-                        </motion.button>
 
-                        {/* Modal Export */}
-                        <SaveTransferModal
-                            isOpen={showExportModal}
-                            onClose={() => setShowExportModal(false)}
-                            mode="export"
-                        />
                     </motion.div>
                 </div>
             </header>
@@ -305,23 +287,35 @@ export default function Hub({ onStartActivity }) {
 
                 {/* Universe Cards Grid */}
                 <div className="grid gap-4">
-                    {UNIVERSE_ORDER.map((universeId, index) => (
-                        <motion.div
-                            key={universeId}
-                            initial={{ opacity: 0, x: -50, rotateY: -15 }}
-                            animate={{ opacity: 1, x: 0, rotateY: 0 }}
-                            transition={{
-                                delay: index * 0.08,
-                                type: 'spring',
-                                stiffness: 100,
-                            }}
-                        >
-                            <UniverseCard
-                                universeId={universeId}
-                                onEnter={handleEnterActivity}
-                            />
-                        </motion.div>
-                    ))}
+                    {UNIVERSE_ORDER.filter(uId => {
+                        // Mode Session Night: on affiche tous les univers de la session (même grisés/futurs)
+                        if (state.isSessionNight) {
+                            return state.sessionUniverseIds?.includes(uId);
+                        }
+                        return true;
+                    }).map((universeId, index) => {
+                        const uState = state.universes[universeId];
+                        const isLocked = uState?.status === 'locked';
+
+                        return (
+                            <motion.div
+                                key={universeId}
+                                initial={{ opacity: 0, x: -50, rotateY: -15 }}
+                                animate={{ opacity: 1, x: 0, rotateY: 0 }}
+                                transition={{
+                                    delay: index * 0.08,
+                                    type: 'spring',
+                                    stiffness: 100,
+                                }}
+                                className={isLocked ? 'opacity-70 grayscale contrast-125' : ''}
+                            >
+                                <UniverseCard
+                                    universeId={universeId}
+                                    onEnter={handleEnterActivity}
+                                />
+                            </motion.div>
+                        );
+                    })}
                 </div>
 
                 {/* Status Panel */}
@@ -479,6 +473,69 @@ export default function Hub({ onStartActivity }) {
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {/* ═══════════════════════════════════════════════════════════════════════════
+                SESSION NIGHT INTRO - STYLIZED WINDOW
+            ═══════════════════════════════════════════════════════════════════════════ */}
+            <AnimatePresence>
+                {state.isSessionNight && state.sessionStatus === 'INTRO' && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md p-4"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, y: 20 }}
+                            animate={{ scale: 1, y: 0 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            className="relative w-full max-w-4xl bg-slate-900 border border-cyan-500/30 rounded-lg overflow-hidden shadow-[0_0_50px_rgba(6,182,212,0.15)]"
+                        >
+                            {/* Header */}
+                            <div className="bg-slate-800/50 p-3 flex justify-between items-center border-b border-cyan-500/20">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse shadow-[0_0_10px_red]" />
+                                    <span className="text-xs font-mono text-cyan-400 tracking-[0.2em] font-bold">INCOMING TRANSMISSION</span>
+                                </div>
+                                <div className="flex gap-1">
+                                    <div className="w-2 h-2 rounded-full bg-slate-700" />
+                                    <div className="w-2 h-2 rounded-full bg-slate-700" />
+                                    <div className="w-2 h-2 rounded-full bg-slate-700" />
+                                </div>
+                            </div>
+
+                            {/* Video Content */}
+                            <div className="relative aspect-video bg-black">
+                                <video
+                                    src={state.sessionIntroVideoUrl || '/video/intro.mp4'}
+                                    autoPlay
+                                    className="w-full h-full object-contain"
+                                    controls
+                                    disablePictureInPicture
+                                    controlsList="nodownload nofullscreen noremoteplayback"
+                                />
+
+                                {/* Scanlines Overlay for Sci-Fi feel */}
+                                <div className="absolute inset-0 pointer-events-none opacity-10"
+                                    style={{ backgroundImage: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))', backgroundSize: '100% 2px, 3px 100%' }}
+                                />
+
+                                {/* Corner accents */}
+                                <div className="absolute top-4 left-4 w-8 h-8 border-t-2 border-l-2 border-cyan-500/50 pointer-events-none" />
+                                <div className="absolute bottom-4 right-4 w-8 h-8 border-b-2 border-r-2 border-cyan-500/50 pointer-events-none" />
+                            </div>
+
+                            {/* Footer Status */}
+                            <div className="bg-slate-900 p-3 border-t border-cyan-500/20 flex justify-between items-center text-[10px] font-mono text-cyan-500/50">
+                                <span>SECURITY LEVEL: OMEGA</span>
+                                <span>ENCRYPTION: AES-256-GCM</span>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
+
+// HMR Trigger 2

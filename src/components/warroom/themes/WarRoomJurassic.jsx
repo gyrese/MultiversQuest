@@ -3,7 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 
 export default function WarRoomJurassic({ gameState, lastScoringTeam, NEXUS_URL }) {
-    const { teams, history, globalTimer } = gameState;
+    const { teams, history, globalTimer, sessionNight } = gameState;
+
+    const isSessionNight = sessionNight && ['UNIVERSE_ACTIVE', 'QUIZ_ACTIVE'].includes(sessionNight.status);
+    const effectiveTimer = isSessionNight ? (sessionNight.tickRemainingSeconds || 0) : globalTimer;
 
     // Sorting teams by score
     const sortedTeams = useMemo(() =>
@@ -153,8 +156,8 @@ export default function WarRoomJurassic({ gameState, lastScoringTeam, NEXUS_URL 
 
                             <div className="flex justify-between items-end border-b border-[#003300] pb-1">
                                 <span className="text-[#007700] text-xs">TIMER_COUNTDOWN:</span>
-                                <span className={`font-mono text-2xl font-bold ${globalTimer < 300 ? 'text-red-500 animate-pulse' : 'text-[#FFD700]'}`}>
-                                    {formatTime(globalTimer)}
+                                <span className={`font-mono text-2xl font-bold ${effectiveTimer < 300 ? 'text-red-500 animate-pulse' : 'text-[#FFD700]'}`}>
+                                    {formatTime(effectiveTimer)}
                                 </span>
                             </div>
 

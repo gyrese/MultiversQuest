@@ -3,7 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 
 export default function WarRoomFantasy({ gameState, lastScoringTeam, NEXUS_URL }) {
-    const { teams, history, globalTimer } = gameState;
+    const { teams, history, globalTimer, sessionNight } = gameState;
+    const isSessionNight = sessionNight && ['UNIVERSE_ACTIVE', 'QUIZ_ACTIVE'].includes(sessionNight.status);
+    const effectiveTimer = isSessionNight ? (sessionNight.tickRemainingSeconds || 0) : globalTimer;
+
     const sortedTeams = useMemo(() => Object.values(teams).sort((a, b) => b.score - a.score), [teams]);
     const topTeam = sortedTeams[0];
 
@@ -98,7 +101,7 @@ export default function WarRoomFantasy({ gameState, lastScoringTeam, NEXUS_URL }
                     <div className="mt-auto mb-12 text-center">
                         <div className="text-[#8b5a2b] text-sm uppercase tracking-widest mb-2">Sables du Temps</div>
                         <div className="text-5xl font-bold text-[#f4ebd0] drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                            {formatTime(globalTimer)}
+                            {formatTime(effectiveTimer)}
                         </div>
                     </div>
                 </div>

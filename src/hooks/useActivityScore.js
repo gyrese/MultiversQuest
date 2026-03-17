@@ -1,7 +1,7 @@
 
 import { useState, useCallback, useRef } from 'react';
-import { useGame } from '../context/PlayerContext';
-import { useGame as useGlobalGame } from '../context/GameContext';
+import { usePlayer } from '../context/PlayerContext';
+import { useGame } from '../context/GameContext';
 
 /**
  * Hook Activity Engine Standardisé
@@ -16,8 +16,8 @@ import { useGame as useGlobalGame } from '../context/GameContext';
  */
 export function useActivityScore(universeId, activityId, options = {}) {
     const { maxPoints = 1000, activityType = 'standard', onComplete } = options;
-    const { actions } = useGame();
-    const { submitScore } = useGlobalGame();
+    const { actions } = usePlayer();
+    const { submitScore } = useGame();
 
     // État du jeu
     const [isPlaying, setIsPlaying] = useState(false);

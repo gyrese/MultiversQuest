@@ -1,172 +1,98 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
-import { BugHuntEngine } from './engine';
-import { useActivityScore } from '../../hooks/useActivityScore';
-import ActivityShell from '../../components/activity/ActivityShell';
 
-export default function BugHunt({ universeId = 'odyssee_spatiale', onComplete, onExit }) {
+import React, { useRef, useEffect, useState } from 'react';
+import { PixiEngine } from './PixiEngine';
+// import { useActivityScore } from '../../hooks/useActivityScore'; // TBD
+
+export default function BugHunt({ onExit }) {
     const canvasRef = useRef(null);
     const engineRef = useRef(null);
 
-    // États React pour l'UI
-    const [hudState, setHudState] = useState({ score: 0, lives: 3, ammo: 6 });
-    const [gameOver, setGameOver] = useState(false);
-    const [bestScore, setBestScore] = useState(0);
+    // Game HUD State
+    const [score, setScore] = useState(0);
+    const [ammo, setAmmo] = useState(10);
+    const [lives, setLives] = useState(5);
+    const [wave, setWave] = useState(1);
+    const [isGameOver, setIsGameOver] = useState(false);
 
-    // Activity Hook pour soumission finale
-    const {
-        isCompleted,
-        startActivity,
-        finalizeActivity
-    } = useActivityScore(universeId, 'bug_hunt', {
-        maxPoints: 500,
-        activityType: 'shooting',
-        onComplete
-    });
-
-    // Charger meilleur score
+    // ─── ENGINE BRIDGE ────────────────────────────────────────────────────────
     useEffect(() => {
-        const saved = localStorage.getItem('bughunt_best_score');
-        if (saved) setBestScore(parseInt(saved, 10));
+        if (!canvasRef.current) return;
+
+        const callbacks = {
+            onScore: (s) => setScore(s),
+            onAmmo: (a) => setAmmo(a),
+            onWave: (w) => setWave(w),
+        };
+
+        const engine = new PixiEngine(canvasRef.current, callbacks);
+        engineRef.current = engine;
+
+        // v8 Async Init
+        engine.init().then(() => {
+            console.log("👾 PixiRetro Engine Started");
+            engine.start();
+        }).catch(e => console.error("🔥 Engine Init Failed", e));
+
+        return () => {
+            console.log("🛑 PixiRetro Engine Destroyed");
+            engine.destroy(); // Assumes destroy is robust
+            engineRef.current = null;
+        };
     }, []);
 
-    // Initialisation du Moteur
-    const initEngine = useCallback(() => {
-        if (!canvasRef.current || engineRef.current) return; // Eviter double init
-
-        console.log("🎮 BugHunt: Initializing Engine...");
-
-        const engine = new BugHuntEngine(canvasRef.current, {
-            onScore: (score, combo) => {
-                setHudState(prev => ({ ...prev, score, combo }));
-            },
-            onLives: (lives) => {
-                setHudState(prev => ({ ...prev, lives }));
-            },
-            onAmmo: (ammo) => {
-                setHudState(prev => ({ ...prev, ammo }));
-            },
-            onGameOver: (finalScore) => {
-                console.log("🎮 BugHunt: Game Over", finalScore);
-                setGameOver(true);
-                const currentBest = parseInt(localStorage.getItem('bughunt_best_score') || '0', 10);
-                if (finalScore > currentBest) {
-                    localStorage.setItem('bughunt_best_score', finalScore);
-                    setBestScore(finalScore);
-                }
-                finalizeActivity(finalScore);
-            }
-        });
-
-        engineRef.current = engine;
-        engine.start();
-        startActivity(); // Notifie le hook que l'activité a commencé
-
-        return () => engine.destroy();
-    }, [startActivity, finalizeActivity]);
-
-    // Démarrage initial (SANS dépendre de isPlaying pour éviter le deadlock)
-    useEffect(() => {
-        if (!isCompleted && !gameOver) {
-            initEngine();
-        }
-
-        // Cleanup on unmount
-        return () => {
-            if (engineRef.current) {
-                engineRef.current.destroy();
-                engineRef.current = null;
-            }
-        };
-    }, [isCompleted, gameOver, initEngine]);
-
-    const handleRestart = () => {
-        setGameOver(false);
-        setHudState({ score: 0, lives: 3, ammo: 6 });
-        // Le useEffect relié à !gameOver va re-déclencher initEngine si engineRef est null ?
-        // Non, engineRef persiste.
-        // Il faut reset l'engine.
-        if (engineRef.current) {
-            engineRef.current.stop();
-            engineRef.current.start();
-            startActivity();
-        }
+    const handleRetry = () => {
+        window.location.reload();
     };
 
     return (
-        <ActivityShell
-            title="BUG HUNT"
-            subtitle={`Meilleur Score: ${bestScore}`}
-            universeColor="#dc2626"
-            onExit={onExit}
-            isCompleted={isCompleted || gameOver}
-            hideContentOnComplete={false}
-            successContent={
-                <div className="flex flex-col items-center gap-4 p-6 bg-black/80 rounded-xl border border-red-500 z-50 relative pointer-events-auto">
-                    <h2 className="text-4xl text-red-500 font-bold font-orbitron">
-                        {gameOver ? "MISSION ÉCHOUÉE" : "MISSION ACCOMPLIE"}
-                    </h2>
-                    <div className="text-2xl text-white">Score Final: <span className="text-yellow-400">{hudState.score}</span></div>
-                    {hudState.score >= bestScore && hudState.score > 0 && (
-                        <div className="text-green-400 font-bold animate-pulse">NOUVEAU RECORD !</div>
-                    )}
+        <div className="fixed inset-0 bg-black overflow-hidden select-none touch-none font-mono">
+            {/* Canvas 2D (Background) */}
+            <canvas ref={canvasRef} className="absolute inset-0 block" style={{ width: '100%', height: '100%' }} />
 
-                    <div className="flex gap-4 mt-4">
-                        <button
-                            onClick={handleRestart}
-                            className="px-6 py-3 bg-gray-700 hover:bg-gray-600 rounded text-white font-bold pointer-events-auto cursor-pointer"
-                        >
-                            REJOUER
+            {/* CRT SCANLINES FX (CSS Overlay) */}
+            <div className="absolute inset-0 pointer-events-none opacity-20"
+                style={{
+                    backgroundImage: 'linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))',
+                    backgroundSize: '100% 2px, 2px 100%'
+                }}>
+            </div>
+
+            {/* HUD (Top Left) */}
+            <div className="absolute top-4 left-4 text-green-400 font-bold text-xl drop-shadow-[0_0_5px_rgba(0,255,0,0.8)] pointer-events-none">
+                <div>SCORE: {score.toLocaleString()}</div>
+                <div className="text-yellow-400 text-sm mt-1">WAVE {wave}</div>
+            </div>
+
+            {/* HUD (Top Right) */}
+            <div className="absolute top-4 right-4 text-right pointer-events-none">
+                <div className="text-red-500 font-bold text-2xl drop-shadow-[0_0_5px_rgba(255,0,0,0.8)]">
+                    {'♥'.repeat(lives)}
+                </div>
+                <div className="text-cyan-400 font-bold text-xl drop-shadow-[0_0_5px_rgba(0,255,255,0.8)] mt-1">
+                    {'▮'.repeat(ammo)}
+                </div>
+            </div>
+
+            {/* HINT */}
+            <div className="absolute bottom-8 w-full text-center text-white/30 text-xs pointer-events-none">
+                [ DRAG TO AIM — TAP TO SHOOT ]
+            </div>
+
+            {/* GAME OVER */}
+            {isGameOver && (
+                <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center z-50 animate-in fade-in duration-500">
+                    <h1 className="text-6xl text-red-600 font-black tracking-widest mb-4 drop-shadow-[0_0_20px_red]">MORT</h1>
+                    <p className="text-white text-2xl mb-8">SCORE: {score}</p>
+                    <div className="flex gap-4">
+                        <button onClick={onExit} className="px-8 py-3 border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white uppercase font-bold transition-all">
+                            Quitter
                         </button>
-                        <button
-                            onClick={onExit}
-                            className="px-6 py-3 bg-red-600 hover:bg-red-700 rounded text-white font-bold pointer-events-auto cursor-pointer"
-                        >
-                            QUITTER
+                        <button onClick={handleRetry} className="px-8 py-3 border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white uppercase font-bold transition-all">
+                            Rejouer
                         </button>
                     </div>
                 </div>
-            }
-        >
-            {/* CANVAS LAYER - DEBUG RED BACKGROUND si canvas fail */}
-            <div className="fixed inset-0 bg-transparent touch-none select-none overflow-hidden"
-                style={{ zIndex: 1 }}>
-
-                <canvas
-                    ref={canvasRef}
-                    className="block w-full h-full touch-none"
-                    style={{ touchAction: 'none' }}
-                />
-
-                {/* HUD OVERLAY */}
-                {!gameOver && (
-                    <div className="absolute top-0 left-0 w-full h-full pointer-events-none p-4 pt-24 flex justify-between items-start font-mono text-white text-shadow z-50">
-                        <div className="flex flex-col gap-1">
-                            <div className="text-3xl font-bold text-yellow-400">{hudState.score}</div>
-                            <div className="flex gap-1 text-red-500 text-2xl">
-                                {'❤️'.repeat(hudState.lives)}
-                                <span className="opacity-30">{'❤️'.repeat(3 - hudState.lives)}</span>
-                            </div>
-                            {/* AJOUT DEBUGER VISUEL */}
-                            <div className="text-xs text-white/50">ENGINE V2.2 running</div>
-                        </div>
-
-                        <div className="flex gap-1 justify-end">
-                            {Array.from({ length: 6 }).map((_, i) => (
-                                <div
-                                    key={i}
-                                    className={`w-3 h-8 rounded-sm ${i < hudState.ammo ? 'bg-yellow-400 shadow-[0_0_5px_#fbbf24]' : 'bg-gray-800 border border-gray-600'}`}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {hudState.ammo === 0 && !gameOver && (
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-500 font-bold text-2xl animate-pulse pointer-events-none z-50">
-                        RECHARGEZ !
-                    </div>
-                )}
-            </div>
-        </ActivityShell>
+            )}
+        </div>
     );
 }

@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { UNIVERSES } from '../data/universes';
-import { useGame } from '../context/PlayerContext';
+import { usePlayer } from '../context/PlayerContext';
 
 export default function UniverseCard({ universeId, onEnter }) {
-    const { state, actions } = useGame();
+    const { state, actions } = usePlayer();
     const [isExpanded, setIsExpanded] = useState(false);
 
     const universeConfig = UNIVERSES[universeId];
@@ -14,7 +14,10 @@ export default function UniverseCard({ universeId, onEnter }) {
 
     const { name, subtitle, icon, image, colors, activities } = universeConfig;
     const { status, completedActivities } = universeState;
-    const totalActivities = Object.keys(activities).length;
+    // En Session Night, seules les activités déverrouillées comptent (pas toutes les 8 de l'univers)
+    const totalActivities = state.isSessionNight
+        ? Object.values(universeState.activities || {}).filter(a => a.status !== 'locked').length
+        : Object.keys(activities).length;
     const progress = actions.getUniverseProgress(universeId);
 
     const isLocked = status === 'locked';
@@ -173,20 +176,42 @@ export default function UniverseCard({ universeId, onEnter }) {
                                     const isActivityLocked = activityState?.status === 'locked';
                                     const isActivityCompleted = activityState?.status === 'completed';
 
+                                    // SESSION NIGHT: Hide locked activities completely (reduce noise)
+                                    // User req: "show ONLY selected 4 challenges"
+                                    if (state.isSessionNight && isActivityLocked) {
+                                        return null;
+                                    }
+
+                                    // Detect Quiz Highlight
+                                    const isQuiz = activity.type === 'quiz' || activity.id.includes('quiz'); // Robust check
+                                    const isQuizHighlight = isQuiz && !isActivityLocked && !isActivityCompleted;
+
                                     return (
                                         <motion.button
                                             key={activity.id}
                                             initial={{ opacity: 0, x: -20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: index * 0.05 }}
+                                            animate={isQuizHighlight ? {
+                                                opacity: 1, x: 0,
+                                                scale: [1, 1.02, 1],
+                                                borderColor: ['#f59e0b', '#fbbf24', '#f59e0b'], // Amber/Gold pulse
+                                                boxShadow: ['0 0 0px rgba(245,158,11,0)', '0 0 15px rgba(245,158,11,0.3)', '0 0 0px rgba(245,158,11,0)']
+                                            } : { opacity: 1, x: 0 }}
+                                            transition={isQuizHighlight ? {
+                                                duration: 1.5,
+                                                repeat: Infinity
+                                            } : { delay: index * 0.05 }}
                                             onClick={() => !isActivityLocked && handleEnterActivity(activity.id)}
                                             disabled={isActivityLocked}
                                             className={`relative flex items-center gap-3 p-3 rounded-xl text-left transition-all ${isActivityLocked
-                                                ? 'bg-black/20 cursor-not-allowed opacity-50'
-                                                : 'bg-black/30 hover:bg-black/50 cursor-pointer'
+                                                ? 'bg-black/20 cursor-not-allowed opacity-50 grayscale' // Grayscale added for extra "disabled" feel
+                                                : isQuizHighlight
+                                                    ? 'bg-amber-500/10 cursor-pointer'
+                                                    : 'bg-black/30 hover:bg-black/50 cursor-pointer'
                                                 }`}
                                             style={{
-                                                border: `1px solid ${isActivityCompleted ? '#22c55e40' : isActivityLocked ? '#33333340' : colors.primary + '30'}`,
+                                                border: isQuizHighlight
+                                                    ? '2px solid #f59e0b'
+                                                    : `1px solid ${isActivityCompleted ? '#22c55e40' : isActivityLocked ? '#33333340' : colors.primary + '30'}`,
                                             }}
                                             whileHover={!isActivityLocked ? { scale: 1.02, x: 5 } : {}}
                                             whileTap={!isActivityLocked ? { scale: 0.98 } : {}}
@@ -198,11 +223,11 @@ export default function UniverseCard({ universeId, onEnter }) {
 
                                             {/* Activity Info */}
                                             <div className="flex-1 min-w-0">
-                                                <h4 className={`font-semibold text-sm ${isActivityLocked ? 'text-gray-600' : 'text-white'}`}>
-                                                    {activity.name}
+                                                <h4 className={`font-semibold text-sm ${isActivityLocked ? 'text-gray-600' : isQuizHighlight ? 'text-amber-400 font-bold' : 'text-white'}`}>
+                                                    {isQuizHighlight ? '🔥 ' : ''}{activity.name}
                                                 </h4>
                                                 <p className="text-xs text-gray-500 truncate">
-                                                    {activity.film}
+                                                    {activity.type === 'quiz' ? 'Épreuve Finale' : activity.film}
                                                 </p>
                                             </div>
 
@@ -233,7 +258,7 @@ export default function UniverseCard({ universeId, onEnter }) {
                                             {!isActivityLocked && (
                                                 <motion.span
                                                     className="text-lg"
-                                                    style={{ color: colors.primary }}
+                                                    style={{ color: isQuizHighlight ? '#f59e0b' : colors.primary }}
                                                     animate={{ x: [0, 5, 0] }}
                                                     transition={{ duration: 1.5, repeat: Infinity }}
                                                 >

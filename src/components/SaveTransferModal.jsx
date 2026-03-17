@@ -2,10 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import QRCode from "react-qr-code";
 import { Html5QrcodeScanner, Html5Qrcode } from "html5-qrcode";
-import { useGame as usePlayerGame } from '../context/PlayerContext';
+import { usePlayer } from '../context/PlayerContext';
 
 export default function SaveTransferModal({ isOpen, onClose, mode = 'import', onImportSuccess }) {
-    const { state, actions } = usePlayerGame();
+    const { state, actions } = usePlayer();
     const [scanError, setScanError] = useState(null);
     const scannerRef = useRef(null);
 

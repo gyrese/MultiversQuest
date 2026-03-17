@@ -3,7 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 
 export default function WarRoomPostApo({ gameState, lastScoringTeam, NEXUS_URL }) {
-    const { teams, history, globalTimer } = gameState;
+    const { teams, history, globalTimer, sessionNight } = gameState;
+
+    const isSessionNight = sessionNight && ['UNIVERSE_ACTIVE', 'QUIZ_ACTIVE'].includes(sessionNight.status);
+    const effectiveTimer = isSessionNight ? (sessionNight.tickRemainingSeconds || 0) : globalTimer;
+
     const sortedTeams = useMemo(() => Object.values(teams).sort((a, b) => b.score - a.score), [teams]);
     const topTeam = sortedTeams[0];
 
@@ -105,7 +109,7 @@ export default function WarRoomPostApo({ gameState, lastScoringTeam, NEXUS_URL }
                         <div className="w-full border-t-2 border-[#ffb300]/30 pt-4 mt-8 flex justify-between items-end">
                             <div>
                                 <div className="text-xs uppercase">Temps avant Fusion</div>
-                                <div className="text-5xl font-bold font-mono tracking-widest">{formatTime(globalTimer)}</div>
+                                <div className="text-5xl font-bold font-mono tracking-widest">{formatTime(effectiveTimer)}</div>
                             </div>
 
                             {/* Geiger Counter Visual */}

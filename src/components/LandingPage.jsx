@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useGame } from '../context/PlayerContext';
+import { usePlayer } from '../context/PlayerContext';
 
 export default function LandingPage({ onEnter }) {
     const [teamName, setTeamName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [bootSequence, setBootSequence] = useState([]);
-    const { actions } = useGame();
+    const { actions } = usePlayer();
 
     // Boot sequence animation
     useEffect(() => {

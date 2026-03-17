@@ -1,18 +1,27 @@
 import { useState } from 'react';
-import { useGame } from '../../context/PlayerContext';
+import { usePlayer } from '../../context/PlayerContext';
+import { useGame } from '../../context/GameContext';
 import { UNIVERSES } from '../../data/universes';
 
 export default function DebugPanel({ onLaunch }) {
-    const { actions } = useGame();
+    const { actions } = usePlayer();
+    const { submitScore } = useGame();
     const [isOpen, setIsOpen] = useState(false);
 
     const handleWin = (universeId, activityId, maxPoints) => {
+        const points = maxPoints || 100;
+
+        // 1. Mise à jour locale (Feedback immédiat UI)
         if (actions && actions.completeActivity) {
-            // Envoyer "victoire" au serveur
-            actions.completeActivity(universeId, activityId, maxPoints || 100);
-            alert(`✅ Victoire simulée pour ${activityId} (+${maxPoints || 100} pts)`);
+            actions.completeActivity(universeId, activityId, points);
+        }
+
+        // 2. Mise à jour serveur (Source de vérité)
+        if (submitScore) {
+            submitScore(universeId, activityId, points, true);
+            alert(`✅ Victoire simulée pour ${activityId} (+${points} pts envoyé au serveur)`);
         } else {
-            console.error('Action completeActivity introuvable');
+            alert(`⚠️ Score local mis à jour, mais submitScore non disponible.`);
         }
     };
 

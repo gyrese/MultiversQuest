@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useGame } from '../../context/PlayerContext';
+import { usePlayer } from '../../context/PlayerContext';
 
 /**
  * ActivityShell - Conteneur standard pour toutes les activités
@@ -27,7 +27,7 @@ export default function ActivityShell({
     background,
     successContent,
 }) {
-    const { state } = useGame();
+    const { state } = usePlayer();
     // Utiliser la couleur de l'univers si disponible
     // const themeColor = universeColor;
 

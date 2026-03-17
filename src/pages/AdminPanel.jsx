@@ -6,6 +6,8 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useGame } from '../context/GameContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import SessionNightManager from '../components/SessionNightManager';
+import AdminLanding from '../components/AdminLanding';
 
 // Événements scénaristiques prédéfinis
 const SCENARIO_EVENTS = [
@@ -85,6 +87,8 @@ export default function AdminPanel() {
         identify
     } = useGame();
 
+    const [showLanding, setShowLanding] = useState(true); // Afficher l'écran d'accueil au démarrage
+    const [activeTab, setActiveTab] = useState('standard'); // 'standard' | 'session'
     const [selectedTeam, setSelectedTeam] = useState(null);
     const [pointsToAdd, setPointsToAdd] = useState(100);
     const [customTimer, setCustomTimer] = useState('');
@@ -100,6 +104,13 @@ export default function AdminPanel() {
     useEffect(() => {
         identify('ADMIN');
     }, [identify]);
+
+    // Entrée dans l'admin depuis le landing
+    const handleEnterAdmin = (tab) => {
+        if (tab === 'session') setActiveTab('session');
+        else setActiveTab('standard');
+        setShowLanding(false);
+    };
 
     // Afficher une notification
     const showNotification = (message, type = 'success') => {
@@ -232,6 +243,11 @@ export default function AdminPanel() {
 
     const statusBadge = getStatusBadge();
 
+    // Rendu conditionnel : Landing OU Admin Panel
+    if (showLanding) {
+        return <AdminLanding onEnterAdmin={handleEnterAdmin} />;
+    }
+
     return (
         <div className="admin-panel">
             {/* Notification Toast */}
@@ -251,11 +267,37 @@ export default function AdminPanel() {
             {/* Header */}
             <header className="admin-header">
                 <div className="header-left">
-                    <h1>👑 Game Master</h1>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => setShowLanding(true)}
+                            className="text-white/40 hover:text-white/80 transition-colors text-sm px-2 py-1 rounded border border-white/10 hover:border-white/30"
+                            title="Retour à l'accueil"
+                        >
+                            ← Accueil
+                        </button>
+                        <h1>👑 Game Master</h1>
+                    </div>
                     <span className={`connection-status ${connected ? 'online' : 'offline'}`}>
                         {connected ? '🟢 Connecté' : '🔴 Déconnecté'}
                     </span>
+                    <div className="flex gap-2 ml-8">
+                        <button
+                            className={`btn-tab ${activeTab === 'standard' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('standard')}
+                        >
+                            <span className="text-xl mr-2">🎛️</span>
+                            Standard
+                        </button>
+                        <button
+                            className={`btn-tab ${activeTab === 'session' ? 'active' : ''}`}
+                            onClick={() => setActiveTab('session')}
+                        >
+                            <span className="text-xl mr-2">🌙</span>
+                            Session Night
+                        </button>
+                    </div>
                 </div>
+
                 <div className="header-center">
                     <div className="timer-display">
                         <span className="timer-label">TEMPS RESTANT</span>
@@ -273,341 +315,347 @@ export default function AdminPanel() {
             </header>
 
             <main className="admin-main">
-                {/* Colonne Gauche - Contrôles */}
-                <section className="control-section">
-                    {/* Game Controls */}
-                    <div className="card control-card">
-                        <h2>🎮 Contrôle du Jeu</h2>
-                        <div className="button-grid">
-                            {gameState.status === 'LOBBY' && (
-                                <button className="btn btn-start" onClick={handleStartGame}>
-                                    ▶️ Démarrer
-                                </button>
-                            )}
-                            {gameState.status === 'PLAYING' && (
-                                <button className="btn btn-pause" onClick={handlePauseGame}>
-                                    ⏸️ Pause
-                                </button>
-                            )}
-                            {gameState.status === 'PAUSED' && (
-                                <button className="btn btn-resume" onClick={handleResumeGame}>
-                                    ▶️ Reprendre
-                                </button>
-                            )}
-                            {(gameState.status === 'PLAYING' || gameState.status === 'PAUSED') && (
-                                <button className="btn btn-end" onClick={handleEndGame}>
-                                    🏁 Terminer
-                                </button>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Timer Controls */}
-                    <div className="card timer-card">
-                        <h2>⏱️ Timer</h2>
-                        <div className="timer-presets">
-                            {TIMER_PRESETS.map(preset => (
-                                <button
-                                    key={preset.seconds}
-                                    className="btn btn-timer"
-                                    onClick={() => handleSetTimer(preset.seconds)}
-                                >
-                                    {preset.label}
-                                </button>
-                            ))}
-                        </div>
-                        <div className="custom-timer">
-                            <input
-                                type="number"
-                                placeholder="Minutes..."
-                                value={customTimer}
-                                onChange={(e) => setCustomTimer(e.target.value)}
-                                min="1"
-                            />
-                            <button className="btn btn-set" onClick={handleCustomTimer}>
-                                Définir
-                            </button>
-                        </div>
-                        <div className="timer-quick">
-                            <button className="btn btn-add" onClick={() => handleSetTimer(gameState.globalTimer + 300)}>
-                                +5 min
-                            </button>
-                            <button className="btn btn-sub" onClick={() => handleSetTimer(Math.max(0, gameState.globalTimer - 300))}>
-                                -5 min
-                            </button>
-                        </div>
-                    </div>
-
-                    {/* Scenario Events */}
-                    <div className="card events-card">
-                        <h2>⚡ Événements Scénaristiques</h2>
-                        <div className="events-grid">
-                            {SCENARIO_EVENTS.map(event => (
-                                <motion.button
-                                    key={event.id}
-                                    className="btn btn-event"
-                                    style={{ '--event-color': event.color }}
-                                    onClick={() => handleTriggerEvent(event)}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                >
-                                    <span className="event-icon">{event.icon}</span>
-                                    <span className="event-name">{event.name}</span>
-                                </motion.button>
-                            ))}
-                        </div>
-
-                        {/* Active Effects */}
-                        {gameState.activeEffects?.length > 0 && (
-                            <div className="active-effects">
-                                <h3>Effets Actifs:</h3>
-                                {gameState.activeEffects.map((eff, i) => (
-                                    <span key={i} className="effect-tag">{eff.effect}</span>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-
-                    {/* 📺 Contrôle War Room */}
-                    <div className="card warroom-card">
-                        <h2>📺 Contrôle War Room</h2>
-                        <p className="warroom-hint">
-                            Effets visuels sur l'écran <code>/warroom</code>
-                        </p>
-
-                        {/* Theme Selection */}
-                        <div className="warroom-section">
-                            <label>🎨 Thème Visuel</label>
-                            <div className="button-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem' }}>
-                                {/* DÉFAUT */}
-                                <button
-                                    className={`btn`}
-                                    onClick={() => adminActions.setWarRoomTheme('default')}
-                                    style={{
-                                        background: gameState.themeUniverse === 'default' ? '#8e44ad' : 'rgba(255,255,255,0.1)',
-                                        gridColumn: 'span 2'
-                                    }}
-                                >
-                                    🌀 Défaut (Sci-Fi)
-                                </button>
-
-                                {/* SPACE MISSION (NEW) */}
-                                <button
-                                    className={`btn`}
-                                    onClick={() => adminActions.setWarRoomTheme('odyssee_spatiale')}
-                                    style={{
-                                        background: gameState.themeUniverse === 'odyssee_spatiale' ? '#0ea5e9' : 'rgba(255,255,255,0.05)',
-                                        color: gameState.themeUniverse === 'odyssee_spatiale' ? '#fff' : '#38bdf8',
-                                        border: '1px solid #38bdf8',
-                                        gridColumn: 'span 2'
-                                    }}
-                                >
-                                    🚀 Space Mission
-                                </button>
-
-                                {/* JURASSIC */}
-                                <button
-                                    className={`btn`}
-                                    onClick={() => adminActions.setWarRoomTheme('jurassic')}
-                                    style={{
-                                        background: gameState.themeUniverse === 'jurassic' ? '#27ae60' : 'rgba(255,255,255,0.05)',
-                                        color: gameState.themeUniverse === 'jurassic' ? '#fff' : '#2ecc71',
-                                        border: '1px solid #2ecc71'
-                                    }}
-                                >
-                                    🦖 Jurassic
-                                </button>
-
-                                {/* POST-APO */}
-                                <button
-                                    className={`btn`}
-                                    onClick={() => adminActions.setWarRoomTheme('post_apo')}
-                                    style={{
-                                        background: gameState.themeUniverse === 'post_apo' ? '#ea580c' : 'rgba(255,255,255,0.05)',
-                                        color: gameState.themeUniverse === 'post_apo' ? '#fff' : '#fb923c',
-                                        border: '1px solid #fb923c'
-                                    }}
-                                >
-                                    ☢️ Post-Apo
-                                </button>
-
-                                {/* MARIO */}
-                                <button
-                                    className={`btn`}
-                                    onClick={() => adminActions.setWarRoomTheme('mario')}
-                                    style={{
-                                        background: gameState.themeUniverse === 'mario' ? '#e52521' : 'rgba(255,255,255,0.05)',
-                                        color: gameState.themeUniverse === 'mario' ? '#fff' : '#f87171',
-                                        border: '1px solid #f87171'
-                                    }}
-                                >
-                                    🍄 Mario (8-bit)
-                                </button>
-
-                                {/* FANTASY */}
-                                <button
-                                    className={`btn`}
-                                    onClick={() => adminActions.setWarRoomTheme('fantasy')}
-                                    style={{
-                                        background: gameState.themeUniverse === 'fantasy' ? '#d4af37' : 'rgba(255,255,255,0.05)',
-                                        color: gameState.themeUniverse === 'fantasy' ? '#fff' : '#fcd34d',
-                                        border: '1px solid #fcd34d'
-                                    }}
-                                >
-                                    ⚔️ Fantasy
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Alerte Rouge */}
-                        <div className="warroom-section">
-                            <label>🚨 Alerte Rouge</label>
-                            <div className="warroom-input-group">
-                                <input
-                                    type="text"
-                                    value={alertMessage}
-                                    onChange={(e) => setAlertMessage(e.target.value)}
-                                    placeholder="Message d'alerte..."
-                                />
-                                <button className="btn btn-alert" onClick={handleTriggerAlert}>
-                                    Déclencher
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Glitch */}
-                        <div className="warroom-section">
-                            <label>🔮 Effet Glitch</label>
-                            <button className="btn btn-glitch" onClick={handleTriggerGlitch}>
-                                Activer Glitch (3s)
-                            </button>
-                        </div>
-
-                        {/* Popup Univers Débloqué */}
-                        <div className="warroom-section">
-                            <label>🌌 Popup Univers Débloqué</label>
-                            <div className="warroom-input-group">
-                                <input
-                                    type="text"
-                                    value={unlockUniverse}
-                                    onChange={(e) => setUnlockUniverse(e.target.value)}
-                                    placeholder="Nom de l'univers..."
-                                />
-                                <input
-                                    type="text"
-                                    value={unlockTeam}
-                                    onChange={(e) => setUnlockTeam(e.target.value)}
-                                    placeholder="Équipe..."
-                                />
-                            </div>
-                            <button className="btn btn-unlock" onClick={handleShowUnlock}>
-                                Afficher Popup
-                            </button>
-                        </div>
-                    </div>
-                </section>
-
-                {/* Colonne Droite - Équipes */}
-                <section className="teams-section">
-                    <div className="card teams-card">
-                        <h2>👥 Équipes ({Object.keys(gameState.teams).length})</h2>
-
-                        <div className="teams-list">
-                            {sortedTeams.length === 0 ? (
-                                <div className="no-teams">
-                                    <span>🎯</span>
-                                    <p>Aucune équipe inscrite</p>
+                {activeTab === 'session' ? (
+                    <SessionNightManager />
+                ) : (
+                    <>
+                        {/* Colonne Gauche - Contrôles */}
+                        <section className="control-section">
+                            {/* Game Controls */}
+                            <div className="card control-card">
+                                <h2>🎮 Contrôle du Jeu</h2>
+                                <div className="button-grid">
+                                    {gameState.status === 'LOBBY' && (
+                                        <button className="btn btn-start" onClick={handleStartGame}>
+                                            ▶️ Démarrer
+                                        </button>
+                                    )}
+                                    {gameState.status === 'PLAYING' && (
+                                        <button className="btn btn-pause" onClick={handlePauseGame}>
+                                            ⏸️ Pause
+                                        </button>
+                                    )}
+                                    {gameState.status === 'PAUSED' && (
+                                        <button className="btn btn-resume" onClick={handleResumeGame}>
+                                            ▶️ Reprendre
+                                        </button>
+                                    )}
+                                    {(gameState.status === 'PLAYING' || gameState.status === 'PAUSED') && (
+                                        <button className="btn btn-end" onClick={handleEndGame}>
+                                            🏁 Terminer
+                                        </button>
+                                    )}
                                 </div>
-                            ) : (
-                                sortedTeams.map((team, index) => (
-                                    <motion.div
-                                        key={team.id}
-                                        className={`team-row ${selectedTeam === team.id ? 'selected' : ''}`}
-                                        onClick={() => setSelectedTeam(selectedTeam === team.id ? null : team.id)}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        transition={{ delay: index * 0.05 }}
-                                    >
-                                        <div className="team-rank">#{index + 1}</div>
-                                        <div className="team-info">
-                                            <span className="team-name">{team.name}</span>
-                                            <span className={`team-status ${team.connected ? 'online' : 'offline'}`}>
-                                                {team.connected ? '🟢' : '⚫'}
-                                            </span>
+                            </div>
+
+                            {/* Timer Controls */}
+                            <div className="card timer-card">
+                                <h2>⏱️ Timer</h2>
+                                <div className="timer-presets">
+                                    {TIMER_PRESETS.map(preset => (
+                                        <button
+                                            key={preset.seconds}
+                                            className="btn btn-timer"
+                                            onClick={() => handleSetTimer(preset.seconds)}
+                                        >
+                                            {preset.label}
+                                        </button>
+                                    ))}
+                                </div>
+                                <div className="custom-timer">
+                                    <input
+                                        type="number"
+                                        placeholder="Minutes..."
+                                        value={customTimer}
+                                        onChange={(e) => setCustomTimer(e.target.value)}
+                                        min="1"
+                                    />
+                                    <button className="btn btn-set" onClick={handleCustomTimer}>
+                                        Définir
+                                    </button>
+                                </div>
+                                <div className="timer-quick">
+                                    <button className="btn btn-add" onClick={() => handleSetTimer(gameState.globalTimer + 300)}>
+                                        +5 min
+                                    </button>
+                                    <button className="btn btn-sub" onClick={() => handleSetTimer(Math.max(0, gameState.globalTimer - 300))}>
+                                        -5 min
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Scenario Events */}
+                            <div className="card events-card">
+                                <h2>⚡ Événements Scénaristiques</h2>
+                                <div className="events-grid">
+                                    {SCENARIO_EVENTS.map(event => (
+                                        <motion.button
+                                            key={event.id}
+                                            className="btn btn-event"
+                                            style={{ '--event-color': event.color }}
+                                            onClick={() => handleTriggerEvent(event)}
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                        >
+                                            <span className="event-icon">{event.icon}</span>
+                                            <span className="event-name">{event.name}</span>
+                                        </motion.button>
+                                    ))}
+                                </div>
+
+                                {/* Active Effects */}
+                                {gameState.activeEffects?.length > 0 && (
+                                    <div className="active-effects">
+                                        <h3>Effets Actifs:</h3>
+                                        {gameState.activeEffects.map((eff, i) => (
+                                            <span key={i} className="effect-tag">{eff.effect}</span>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* 📺 Contrôle War Room */}
+                            <div className="card warroom-card">
+                                <h2>📺 Contrôle War Room</h2>
+                                <p className="warroom-hint">
+                                    Effets visuels sur l'écran <code>/warroom</code>
+                                </p>
+
+                                {/* Theme Selection */}
+                                <div className="warroom-section">
+                                    <label>🎨 Thème Visuel</label>
+                                    <div className="button-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem' }}>
+                                        {/* DÉFAUT */}
+                                        <button
+                                            className={`btn`}
+                                            onClick={() => adminActions.setWarRoomTheme('default')}
+                                            style={{
+                                                background: gameState.themeUniverse === 'default' ? '#8e44ad' : 'rgba(255,255,255,0.1)',
+                                                gridColumn: 'span 2'
+                                            }}
+                                        >
+                                            🌀 Défaut (Sci-Fi)
+                                        </button>
+
+                                        {/* SPACE MISSION (NEW) */}
+                                        <button
+                                            className={`btn`}
+                                            onClick={() => adminActions.setWarRoomTheme('odyssee_spatiale')}
+                                            style={{
+                                                background: gameState.themeUniverse === 'odyssee_spatiale' ? '#0ea5e9' : 'rgba(255,255,255,0.05)',
+                                                color: gameState.themeUniverse === 'odyssee_spatiale' ? '#fff' : '#38bdf8',
+                                                border: '1px solid #38bdf8',
+                                                gridColumn: 'span 2'
+                                            }}
+                                        >
+                                            🚀 Space Mission
+                                        </button>
+
+                                        {/* JURASSIC */}
+                                        <button
+                                            className={`btn`}
+                                            onClick={() => adminActions.setWarRoomTheme('jurassic')}
+                                            style={{
+                                                background: gameState.themeUniverse === 'jurassic' ? '#27ae60' : 'rgba(255,255,255,0.05)',
+                                                color: gameState.themeUniverse === 'jurassic' ? '#fff' : '#2ecc71',
+                                                border: '1px solid #2ecc71'
+                                            }}
+                                        >
+                                            🦖 Jurassic
+                                        </button>
+
+                                        {/* POST-APO */}
+                                        <button
+                                            className={`btn`}
+                                            onClick={() => adminActions.setWarRoomTheme('post_apo')}
+                                            style={{
+                                                background: gameState.themeUniverse === 'post_apo' ? '#ea580c' : 'rgba(255,255,255,0.05)',
+                                                color: gameState.themeUniverse === 'post_apo' ? '#fff' : '#fb923c',
+                                                border: '1px solid #fb923c'
+                                            }}
+                                        >
+                                            ☢️ Post-Apo
+                                        </button>
+
+                                        {/* MARIO */}
+                                        <button
+                                            className={`btn`}
+                                            onClick={() => adminActions.setWarRoomTheme('mario')}
+                                            style={{
+                                                background: gameState.themeUniverse === 'mario' ? '#e52521' : 'rgba(255,255,255,0.05)',
+                                                color: gameState.themeUniverse === 'mario' ? '#fff' : '#f87171',
+                                                border: '1px solid #f87171'
+                                            }}
+                                        >
+                                            🍄 Mario (8-bit)
+                                        </button>
+
+                                        {/* FANTASY */}
+                                        <button
+                                            className={`btn`}
+                                            onClick={() => adminActions.setWarRoomTheme('fantasy')}
+                                            style={{
+                                                background: gameState.themeUniverse === 'fantasy' ? '#d4af37' : 'rgba(255,255,255,0.05)',
+                                                color: gameState.themeUniverse === 'fantasy' ? '#fff' : '#fcd34d',
+                                                border: '1px solid #fcd34d'
+                                            }}
+                                        >
+                                            ⚔️ Fantasy
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Alerte Rouge */}
+                                <div className="warroom-section">
+                                    <label>🚨 Alerte Rouge</label>
+                                    <div className="warroom-input-group">
+                                        <input
+                                            type="text"
+                                            value={alertMessage}
+                                            onChange={(e) => setAlertMessage(e.target.value)}
+                                            placeholder="Message d'alerte..."
+                                        />
+                                        <button className="btn btn-alert" onClick={handleTriggerAlert}>
+                                            Déclencher
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {/* Glitch */}
+                                <div className="warroom-section">
+                                    <label>🔮 Effet Glitch</label>
+                                    <button className="btn btn-glitch" onClick={handleTriggerGlitch}>
+                                        Activer Glitch (3s)
+                                    </button>
+                                </div>
+
+                                {/* Popup Univers Débloqué */}
+                                <div className="warroom-section">
+                                    <label>🌌 Popup Univers Débloqué</label>
+                                    <div className="warroom-input-group">
+                                        <input
+                                            type="text"
+                                            value={unlockUniverse}
+                                            onChange={(e) => setUnlockUniverse(e.target.value)}
+                                            placeholder="Nom de l'univers..."
+                                        />
+                                        <input
+                                            type="text"
+                                            value={unlockTeam}
+                                            onChange={(e) => setUnlockTeam(e.target.value)}
+                                            placeholder="Équipe..."
+                                        />
+                                    </div>
+                                    <button className="btn btn-unlock" onClick={handleShowUnlock}>
+                                        Afficher Popup
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Colonne Droite - Équipes */}
+                        <section className="teams-section">
+                            <div className="card teams-card">
+                                <h2>👥 Équipes ({Object.keys(gameState.teams).length})</h2>
+
+                                <div className="teams-list">
+                                    {sortedTeams.length === 0 ? (
+                                        <div className="no-teams">
+                                            <span>🎯</span>
+                                            <p>Aucune équipe inscrite</p>
                                         </div>
-                                        <div className="team-score">{(team.score || 0).toLocaleString()} pts</div>
+                                    ) : (
+                                        sortedTeams.map((team, index) => (
+                                            <motion.div
+                                                key={team.id}
+                                                className={`team-row ${selectedTeam === team.id ? 'selected' : ''}`}
+                                                onClick={() => setSelectedTeam(selectedTeam === team.id ? null : team.id)}
+                                                initial={{ opacity: 0, x: -20 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ delay: index * 0.05 }}
+                                            >
+                                                <div className="team-rank">#{index + 1}</div>
+                                                <div className="team-info">
+                                                    <span className="team-name">{team.name}</span>
+                                                    <span className={`team-status ${team.connected ? 'online' : 'offline'}`}>
+                                                        {team.connected ? '🟢' : '⚫'}
+                                                    </span>
+                                                </div>
+                                                <div className="team-score">{(team.score || 0).toLocaleString()} pts</div>
 
-                                        {/* Actions Panel */}
-                                        <AnimatePresence>
-                                            {selectedTeam === team.id && (
-                                                <motion.div
-                                                    className="team-actions"
-                                                    initial={{ height: 0, opacity: 0 }}
-                                                    animate={{ height: 'auto', opacity: 1 }}
-                                                    exit={{ height: 0, opacity: 0 }}
-                                                >
-                                                    <div className="points-adjust">
-                                                        <input
-                                                            type="number"
-                                                            value={pointsToAdd}
-                                                            onChange={(e) => setPointsToAdd(parseInt(e.target.value) || 0)}
-                                                            onClick={(e) => e.stopPropagation()}
-                                                        />
-                                                        <button
-                                                            className="btn btn-add-points"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleAdjustScore(team.id, pointsToAdd);
-                                                            }}
+                                                {/* Actions Panel */}
+                                                <AnimatePresence>
+                                                    {selectedTeam === team.id && (
+                                                        <motion.div
+                                                            className="team-actions"
+                                                            initial={{ height: 0, opacity: 0 }}
+                                                            animate={{ height: 'auto', opacity: 1 }}
+                                                            exit={{ height: 0, opacity: 0 }}
                                                         >
-                                                            + Ajouter
-                                                        </button>
-                                                        <button
-                                                            className="btn btn-remove-points"
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                handleAdjustScore(team.id, -pointsToAdd);
-                                                            }}
-                                                        >
-                                                            - Retirer
-                                                        </button>
-                                                    </div>
-                                                    <button
-                                                        className="btn btn-delete"
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleDeleteTeam(team.id);
-                                                        }}
-                                                    >
-                                                        🗑️ Supprimer
-                                                    </button>
-                                                </motion.div>
-                                            )}
-                                        </AnimatePresence>
-                                    </motion.div>
-                                ))
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Activity Feed */}
-                    <div className="card history-card">
-                        <h2>📜 Historique</h2>
-                        <div className="history-list">
-                            {gameState.history?.slice(0, 15).map((log, i) => (
-                                <div key={log.id || i} className={`history-item ${log.type.toLowerCase()}`}>
-                                    <span className="history-time">
-                                        {new Date(log.time).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
-                                    </span>
-                                    <span className="history-message">{log.message}</span>
+                                                            <div className="points-adjust">
+                                                                <input
+                                                                    type="number"
+                                                                    value={pointsToAdd}
+                                                                    onChange={(e) => setPointsToAdd(parseInt(e.target.value) || 0)}
+                                                                    onClick={(e) => e.stopPropagation()}
+                                                                />
+                                                                <button
+                                                                    className="btn btn-add-points"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handleAdjustScore(team.id, pointsToAdd);
+                                                                    }}
+                                                                >
+                                                                    + Ajouter
+                                                                </button>
+                                                                <button
+                                                                    className="btn btn-remove-points"
+                                                                    onClick={(e) => {
+                                                                        e.stopPropagation();
+                                                                        handleAdjustScore(team.id, -pointsToAdd);
+                                                                    }}
+                                                                >
+                                                                    - Retirer
+                                                                </button>
+                                                            </div>
+                                                            <button
+                                                                className="btn btn-delete"
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation();
+                                                                    handleDeleteTeam(team.id);
+                                                                }}
+                                                            >
+                                                                🗑️ Supprimer
+                                                            </button>
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
+                                            </motion.div>
+                                        ))
+                                    )}
                                 </div>
-                            ))}
-                            {(!gameState.history || gameState.history.length === 0) && (
-                                <p className="no-history">Aucune activité</p>
-                            )}
-                        </div>
-                    </div>
-                </section>
+                            </div>
+
+                            {/* Activity Feed */}
+                            <div className="card history-card">
+                                <h2>📜 Historique</h2>
+                                <div className="history-list">
+                                    {gameState.history?.slice(0, 15).map((log, i) => (
+                                        <div key={log.id || i} className={`history-item ${log.type.toLowerCase()}`}>
+                                            <span className="history-time">
+                                                {new Date(log.time).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                                            </span>
+                                            <span className="history-message">{log.message}</span>
+                                        </div>
+                                    ))}
+                                    {(!gameState.history || gameState.history.length === 0) && (
+                                        <p className="no-history">Aucune activité</p>
+                                    )}
+                                </div>
+                            </div>
+                        </section>
+                    </>
+                )}
             </main>
 
             {/* Footer - Danger Zone */}
@@ -798,7 +846,34 @@ export default function AdminPanel() {
                 }
 
                 .btn-timer:hover {
-                    background: rgba(0, 212, 255, 0.3);
+                    background: rgba(255, 255, 255, 0.2);
+                }
+
+                /* TABS (NOUVEAU) */
+                .btn-tab {
+                    display: flex;
+                    align-items: center;
+                    background: rgba(0, 0, 0, 0.3);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    color: rgba(255, 255, 255, 0.6);
+                    padding: 0.5rem 1rem;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                }
+
+                .btn-tab:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                    color: white;
+                }
+
+                .btn-tab.active {
+                    background: rgba(124, 58, 237, 0.2);
+                    border-color: #7c3aed;
+                    color: #a78bfa;
+                    box-shadow: 0 0 15px rgba(124, 58, 237, 0.1);
                 }
 
                 .custom-timer {

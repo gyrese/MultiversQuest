@@ -102,8 +102,11 @@ export default function WarRoomSpace({ gameState, lastScoringTeam, NEXUS_URL }) 
         return `${mins}:${secs}`;
     };
 
-    const isCriticalTime = globalTimer < 10 && globalTimer > 0;
-    const isFinished = globalTimer === 0;
+    const isSessionNight = gameState.sessionNight && ['UNIVERSE_ACTIVE', 'QUIZ_ACTIVE'].includes(gameState.sessionNight.status);
+    const effectiveTimer = isSessionNight ? (gameState.sessionNight.tickRemainingSeconds || 0) : globalTimer;
+
+    const isCriticalTime = effectiveTimer < 10 && effectiveTimer > 0;
+    const isFinished = effectiveTimer === 0;
 
     return (
         <div className="relative w-full h-screen bg-[#0A0F1C] text-[#F5F7FA] overflow-hidden flex flex-col font-['Orbitron',_sans-serif] selection:bg-cyan-500/30">
@@ -140,7 +143,7 @@ export default function WarRoomSpace({ gameState, lastScoringTeam, NEXUS_URL }) 
                     animate={isCriticalTime ? { scale: [1, 1.05, 1] } : {}}
                     transition={{ duration: 1, repeat: Infinity }}
                 >
-                    {formatTime(globalTimer)}
+                    {formatTime(effectiveTimer)}
                 </motion.div>
                 {isCriticalTime && (
                     <motion.div

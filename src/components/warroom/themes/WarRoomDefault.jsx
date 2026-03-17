@@ -9,7 +9,9 @@ import TeamAvatar from '../../../components/TeamAvatar';
 
 function Leaderboard({ teams, lastScoringTeam }) {
     const sortedTeams = useMemo(() =>
-        Object.values(teams).sort((a, b) => b.score - a.score),
+        Object.values(teams)
+            .filter(t => t.connected) // Only show connected teams
+            .sort((a, b) => b.score - a.score),
         [teams]);
 
     return (
@@ -211,12 +213,133 @@ function GiantTimer({ seconds }) {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export default function WarRoomDefault({ gameState, lastScoringTeam, NEXUS_URL }) {
-    const { teams, history, status, globalTimer } = gameState;
+    const { teams, history, status, globalTimer, sessionNight } = gameState;
+
+    // Detect if we are waiting for session start
+    const isStandby = status === 'LOBBY' && (!sessionNight || sessionNight.status === 'DRAFT');
+
+    // Pop Culture floating icons for background
+    const POP_ICONS = [
+        { icon: '⚔️', x: 5, y: 10, size: '4rem', delay: 0 },
+        { icon: '🚀', x: 15, y: 75, size: '3.5rem', delay: 1.2 },
+        { icon: '🦖', x: 25, y: 20, size: '5rem', delay: 0.5 },
+        { icon: '💊', x: 35, y: 85, size: '3rem', delay: 2 },
+        { icon: '🧙', x: 50, y: 5, size: '4rem', delay: 0.8 },
+        { icon: '🤖', x: 60, y: 80, size: '4.5rem', delay: 1.5 },
+        { icon: '👾', x: 70, y: 15, size: '3.5rem', delay: 0.3 },
+        { icon: '🍄', x: 80, y: 70, size: '4rem', delay: 1.8 },
+        { icon: '💀', x: 88, y: 30, size: '3rem', delay: 0.7 },
+        { icon: '🌌', x: 92, y: 85, size: '4.5rem', delay: 2.2 },
+        { icon: '🔫', x: 8, y: 50, size: '3rem', delay: 1.1 },
+        { icon: '🐉', x: 45, y: 60, size: '5rem', delay: 0.4 },
+        { icon: '🕷️', x: 75, y: 45, size: '3.5rem', delay: 1.6 },
+        { icon: '⚡', x: 55, y: 40, size: '3rem', delay: 0.9 },
+        { icon: '🎮', x: 20, y: 45, size: '3.5rem', delay: 1.4 },
+    ];
+
+    if (isStandby) {
+        return (
+            <div className="relative z-10 h-screen flex flex-col items-center justify-center p-6 font-sans overflow-hidden">
+                {/* Dark base */}
+                <div className="absolute inset-0 bg-[#030712] z-0" />
+
+                {/* Pop Culture Background - Floating Icons */}
+                <div className="absolute inset-0 z-0 overflow-hidden">
+                    {POP_ICONS.map((item, i) => (
+                        <motion.div
+                            key={i}
+                            className="absolute select-none pointer-events-none"
+                            style={{ left: `${item.x}%`, top: `${item.y}%`, fontSize: item.size, opacity: 0.08 }}
+                            animate={{ y: [0, -20, 0], opacity: [0.06, 0.14, 0.06] }}
+                            transition={{ duration: 4 + item.delay, repeat: Infinity, delay: item.delay, ease: 'easeInOut' }}
+                        >
+                            {item.icon}
+                        </motion.div>
+                    ))}
+                </div>
+
+                {/* Neon grid */}
+                <div className="absolute inset-0 z-0 opacity-15"
+                    style={{ backgroundImage: 'linear-gradient(rgba(100,0,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(100,0,255,0.3) 1px, transparent 1px)', backgroundSize: '60px 60px' }}
+                />
+
+                {/* Radial glow center */}
+                <div className="absolute inset-0 z-0" style={{ background: 'radial-gradient(ellipse at center, rgba(168,85,247,0.15) 0%, transparent 70%)' }} />
+
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="z-10 text-center max-w-4xl"
+                >
+                    <motion.div
+                        className="text-9xl mb-6 inline-block"
+                        animate={{
+                            rotate: [0, 360],
+                            filter: ['drop-shadow(0 0 20px rgba(168,85,247,0.4))', 'drop-shadow(0 0 50px rgba(168,85,247,0.8))', 'drop-shadow(0 0 20px rgba(168,85,247,0.4))']
+                        }}
+                        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+                    >
+                        🌀
+                    </motion.div>
+
+                    <h1 className="font-orbitron text-7xl font-black bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 bg-clip-text text-transparent mb-3">
+                        MULTIVERS QUEST
+                    </h1>
+
+                    {/* TAGLINE */}
+                    <motion.p
+                        className="text-2xl font-bold mb-10"
+                        style={{ fontFamily: 'Orbitron, sans-serif', letterSpacing: '0.05em' }}
+                        animate={{ opacity: [0.7, 1, 0.7] }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                    >
+                        <span className="text-yellow-400">Le bordel</span>{' '}
+                        <span className="text-pink-400">cosmique</span>{' '}
+                        <span className="text-cyan-400">commence ici</span>
+                    </motion.p>
+
+                    <div className="bg-black/50 backdrop-blur-xl border border-purple-500/30 p-8 rounded-3xl flex items-center gap-12 text-left shadow-[0_0_60px_rgba(168,85,247,0.2)]">
+                        <div className="bg-white p-4 rounded-xl shadow-[0_0_30px_rgba(168,85,247,0.3)]">
+                            <QRCodeSVG value={NEXUS_URL} size={200} level="M" />
+                        </div>
+                        <div>
+                            <h2 className="text-3xl text-white font-bold mb-2">REJOIGNEZ LA SESSION</h2>
+                            <p className="text-purple-300 text-xl font-mono mb-6">{NEXUS_URL.replace('http://', '')}</p>
+
+                            <div className="flex items-center gap-4">
+                                <div className="px-4 py-2 bg-purple-900/30 border border-purple-500/30 rounded-lg text-purple-200 animate-pulse">
+                                    📡 En attente du signal...
+                                </div>
+                                <div className="text-white/60">
+                                    {Object.keys(teams).length} équipes connectées
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </motion.div>
+            </div>
+        );
+    }
 
     return (
-        <div className="relative z-10 h-screen flex flex-col p-6 font-sans">
+        <div className="relative z-10 h-screen flex flex-col p-6 font-sans overflow-hidden">
+            {/* Pop Culture Background Icons */}
+            <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+                {POP_ICONS.map((item, i) => (
+                    <motion.div
+                        key={i}
+                        className="absolute select-none"
+                        style={{ left: `${item.x}%`, top: `${item.y}%`, fontSize: item.size, opacity: 0.05 }}
+                        animate={{ y: [0, -15, 0], opacity: [0.04, 0.09, 0.04] }}
+                        transition={{ duration: 5 + item.delay, repeat: Infinity, delay: item.delay, ease: 'easeInOut' }}
+                    >
+                        {item.icon}
+                    </motion.div>
+                ))}
+            </div>
+
             {/* ══════════════════ HEADER ══════════════════ */}
-            <header className="flex items-center justify-between mb-6">
+            <header className="flex items-center justify-between mb-6 relative z-10">
                 <div className="flex items-center gap-4">
                     <motion.div
                         className="text-5xl"
@@ -229,8 +352,8 @@ export default function WarRoomDefault({ gameState, lastScoringTeam, NEXUS_URL }
                         <h1 className="font-orbitron text-4xl font-black bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent">
                             MULTIVERS QUEST
                         </h1>
-                        <div className="text-white/40 text-sm tracking-widest">
-                            QUARTIERS GÉNÉRAUX • CONTRÔLE EN DIRECT
+                        <div className="text-yellow-400/80 text-sm font-bold tracking-wider" style={{ fontFamily: 'Orbitron, sans-serif' }}>
+                            Le bordel cosmique commence ici
                         </div>
                     </div>
                 </div>
@@ -248,7 +371,7 @@ export default function WarRoomDefault({ gameState, lastScoringTeam, NEXUS_URL }
             </header>
 
             {/* ══════════════════ MAIN GRID ══════════════════ */}
-            <div className="flex-1 grid grid-cols-12 gap-6">
+            <div className="flex-1 grid grid-cols-12 gap-6 relative z-10">
 
                 {/* LEFT COLUMN - Leaderboard */}
                 <div className="col-span-5">
@@ -257,7 +380,7 @@ export default function WarRoomDefault({ gameState, lastScoringTeam, NEXUS_URL }
 
                 {/* CENTER COLUMN - Timer + Stats */}
                 <div className="col-span-3 flex flex-col gap-6">
-                    <GiantTimer seconds={globalTimer} />
+                    <GiantTimer seconds={sessionNight && sessionNight.status !== 'DRAFT' && sessionNight.tickRemainingSeconds !== null ? sessionNight.tickRemainingSeconds : globalTimer} />
 
                     {/* Stats rapides */}
                     <div className="bg-black/60 backdrop-blur-md border border-white/10 rounded-2xl p-6 flex-1">

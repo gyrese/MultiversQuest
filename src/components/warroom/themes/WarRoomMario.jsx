@@ -3,7 +3,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { QRCodeSVG } from 'qrcode.react';
 
 export default function WarRoomMario({ gameState, lastScoringTeam, NEXUS_URL }) {
-    const { teams, history, globalTimer } = gameState;
+    const { teams, history, globalTimer, sessionNight } = gameState;
+    const isSessionNight = sessionNight && ['UNIVERSE_ACTIVE', 'QUIZ_ACTIVE'].includes(sessionNight.status);
+    const effectiveTimer = isSessionNight ? (sessionNight.tickRemainingSeconds || 0) : globalTimer;
+
     const sortedTeams = useMemo(() => Object.values(teams).sort((a, b) => b.score - a.score), [teams]);
     const topTeam = sortedTeams[0];
 
@@ -33,7 +36,7 @@ export default function WarRoomMario({ gameState, lastScoringTeam, NEXUS_URL }) 
                 </div>
                 <div className="flex flex-col items-end">
                     <span className="text-[#FBD000]">TEMPS</span>
-                    <span className="text-white">{formatTime(globalTimer)}</span>
+                    <span className="text-white">{formatTime(effectiveTimer)}</span>
                 </div>
             </header>
 
